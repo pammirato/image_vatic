@@ -25,12 +25,13 @@ function Job(data)
 
 function job_import(data)
 {
+    var guiscale = parseFloat(data["guiscale"]); // ME: add video scale in gui
     var job = new Job();
     job.slug = data["slug"];
     job.start = parseInt(data["start"]);
     job.stop = parseInt(data["stop"]);
-    job.width = parseInt(data["width"]);
-    job.height = parseInt(data["height"]);
+    job.width = guiscale*parseInt(data["width"]); // ME: add video scale in gui
+    job.height = guiscale*parseInt(data["height"]); // ME: add video scale in gui
     job.skip = parseInt(data["skip"]);
     job.perobject = parseFloat(data["perobject"]);
     job.completion = parseFloat(data["completion"]);

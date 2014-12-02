@@ -41,6 +41,7 @@ def getjob(id, verified):
             "slug":         video.slug,
             "width":        video.width,
             "height":       video.height,
+	    "guiscale":     video.guiscale, # ME: add video scale in gui
             "skip":         video.skip,
             "perobject":    video.perobjectbonus,
             "completion":   video.completionbonus,

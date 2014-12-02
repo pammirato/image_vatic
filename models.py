@@ -23,6 +23,7 @@ class Video(turkic.database.Base):
     slug            = Column(String(250), index = True)
     width           = Column(Integer)
     height          = Column(Integer)
+    guiscale        = Column(Float, default = 1) # ME: add video scale in gui
     totalframes     = Column(Integer)
     location        = Column(String(250))
     skip            = Column(Integer, default = 0, nullable = False)

@@ -122,6 +122,7 @@ class load(LoadCommand):
         parser.add_argument("--for-training-mistakes", type=int, default=0)
         parser.add_argument("--for-training-data", default = None)
         parser.add_argument("--blow-radius", default = 3)
+	parser.add_argument("--guiscale", type=float,default=1.0) # ME: add video scale in gui
         return parser
 
     def title(self, args):
@@ -201,6 +202,7 @@ class load(LoadCommand):
                       location = os.path.realpath(args.location), 
                       width = width,
                       height = height,
+	 	      guiscale = args.guiscale, # ME: add video scale in gui
                       totalframes = maxframes,
                       skip = args.skip,
                       perobjectbonus = args.per_object_bonus,
