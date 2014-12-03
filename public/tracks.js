@@ -135,9 +135,11 @@ function BoxDrawer(container)
      */
     this.calculateposition = function(xc, yc)
     {
+	var xside = Math.abs(this.startx - xc);
+	var yside = Math.abs(this.starty-yc);
 	if (window.event.shiftKey)
 	{
-	    var squareside = Math.min(Math.abs(this.startx - xc),Math.abs(this.starty-yc));
+	    var squareside = Math.min(xside,yside);
 	    if (xc > this.startx)
 		xc = this.startx + squareside;
   	    else
@@ -146,11 +148,25 @@ function BoxDrawer(container)
 		yc = this.starty + squareside;
 	    else
 		yc = this.starty - squareside;
+	    xside = squareside;
+  	    yside = squareside;
 	}
-        var xtl = Math.min(xc, this.startx);
-        var ytl = Math.min(yc, this.starty);
-        var xbr = Math.max(xc, this.startx);
-        var ybr = Math.max(yc, this.starty);
+
+	var xtl, ytl, xbr, ybr;
+	if (window.event.ctrlKey)
+	{
+            xtl = this.startx - xside/2.0;
+            ytl = this.starty - yside/2.0;
+            xbr = this.startx + xside/2.0;
+            ybr = this.starty + yside/2.0;
+	}
+	else
+	{
+            xtl = Math.min(xc, this.startx);
+            ytl = Math.min(yc, this.starty);
+            xbr = Math.max(xc, this.startx);
+            ybr = Math.max(yc, this.starty);
+	}
         return new Position(xtl, ytl, xbr, ybr)
     }
 
