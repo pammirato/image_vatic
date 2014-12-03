@@ -25,7 +25,8 @@ function Job(data)
 
 function job_import(data)
 {
-    var guiscale = parseFloat(data["guiscale"]); // ME: add video scale in gui
+    var guiscaleStr = getUrlVars()["guiscale"] ;
+    var guiscale = guiscaleStr != null ? parseFloat(guiscaleStr) : 1.0;
     var job = new Job();
     job.slug = data["slug"];
     job.start = parseInt(data["start"]);

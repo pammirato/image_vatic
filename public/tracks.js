@@ -440,7 +440,18 @@ function TrackCollection(player, job)
     };
 }
 
-
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+	vars.push(hash[0]);
+	vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 
 /*
  * A track class.
@@ -480,22 +491,9 @@ function Track(player, color, position)
     this.journal.artificialrightframe = this.player.job.stop;
     this.journal.artificialright = position;
 
-    this.getUrlVars = function()
-    {
-	var vars = [], hash;
-	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-	for(var i = 0; i < hashes.length; i++)
-	{
-	    hash = hashes[i].split('=');
-	    vars.push(hash[0]);
-	    vars[hash[0]] = hash[1];
-	}
-	return vars;
-    }
-
     this.getClippingFlag = function()
     {
-    	var clipping =  this.getUrlVars()["clipping"];
+    	var clipping =  getUrlVars()["clipping"];
 	if (clipping === 'true' || clipping === '1')
 		return true;
 	else if (clipping === 'false' || clipping === '0')
