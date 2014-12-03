@@ -547,6 +547,8 @@ function Track(player, color, position)
     {
 	if (!this.clipping)
 	    return;
+	if (window.event.ctrlKey)
+	    return;
         var width = this.player.job.width;
         var height = this.player.job.height;
         var pos = this.pollposition();
