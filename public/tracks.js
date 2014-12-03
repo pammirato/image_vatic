@@ -424,6 +424,8 @@ function TrackCollection(player, job)
     };
 }
 
+
+
 /*
  * A track class.
  */
@@ -461,6 +463,33 @@ function Track(player, color, position)
 
     this.journal.artificialrightframe = this.player.job.stop;
     this.journal.artificialright = position;
+
+    this.getUrlVars = function()
+    {
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	for(var i = 0; i < hashes.length; i++)
+	{
+	    hash = hashes[i].split('=');
+	    vars.push(hash[0]);
+	    vars[hash[0]] = hash[1];
+	}
+	return vars;
+    }
+
+    this.getClippingFlag = function()
+    {
+    	var clipping =  this.getUrlVars()["clipping"];
+	if (clipping === 'true' || clipping === '1')
+		return true;
+	else if (clipping === 'false' || clipping === '0')
+		return false;
+	else
+		console.warn("incorrect value of clipping GET variable");
+	return true; // in case clipping == null or is different from {true,1,false,0}
+     }
+    this.clipping = this.getClippingFlag();
+
 
     /*
      * Polls the on screen position of the box and returns it.
@@ -516,6 +545,8 @@ function Track(player, color, position)
      */
     this.fixposition = function()
     {
+	if (!this.clipping)
+	    return;
         var width = this.player.job.width;
         var height = this.player.job.height;
         var pos = this.pollposition();
