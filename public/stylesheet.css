@@ -314,9 +314,11 @@ code
     border-style : solid;
     border-width : 2px;
     z-index : 5;
-    background-image: url("diagonals.png");
+    /*background-image: url("diagonals.png");*/
     background-size: 100% 100%;
 }
+
+
 
 .boundingbox .boundingboxtext
 {

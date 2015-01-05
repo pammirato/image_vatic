@@ -459,6 +459,7 @@ function getUrlVars()
 function Track(player, color, position)
 {
     var me = this;
+    this.wasannot = true;
 
     this.journal = new Journal(player.job.start, player.job.blowradius);
     this.attributejournals = {};
@@ -757,8 +758,9 @@ function Track(player, color, position)
     {
         if (this.handle == null)
         {
-            this.handle = $('<div class="boundingbox"><div class="boundingboxtext"></div></div>');
+  	    this.handle = $('<div class="boundingbox"><div class="boundingboxtext"></div></div>');
             this.handle.css("border-color", this.color);
+
             var fill = $('<div class="fill"></div>').appendTo(this.handle);
             fill.css("background-color", this.color);
             this.player.handle.append(this.handle);
@@ -837,6 +839,10 @@ function Track(player, color, position)
         {
             position = this.estimate(frame);
         }
+	if (this.wasannot == false )
+	    this.handle.css("background-image", "");
+	else 
+	    this.handle.css("background-image", 'url("diagonals.png")');
 
         if (position.outside)
         {
@@ -998,9 +1004,11 @@ function Track(player, color, position)
      */
     this.estimate = function(frame)
     {
+	this.wasannot = false;
         var bounds = this.journal.bounds(frame);
         if (bounds['leftframe'] == bounds['rightframe'])
         {
+	    this.wasannot = true;
             return bounds['left'];
         }
 
