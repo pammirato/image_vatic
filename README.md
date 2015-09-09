@@ -1,8 +1,8 @@
-VATIC - Video Annotation Tool from Irvine, California
+# VATIC - Video Annotation Tool from Irvine, California #
 
 VATIC is an online video annotation tool for computer vision research that
 crowdsources work to Amazon's Mechanical Turk. Our tool makes it easy to build
-massive, affordable video data sets. 
+massive, affordable video data sets.
 
 This document will describe how to install and use VATIC. If you want to modify
 VATIC, please read DEVELOPERS after reading this document.
@@ -10,23 +10,23 @@ VATIC, please read DEVELOPERS after reading this document.
 *Note: This is a particular version used to collect bounding boxes for ILSVRC2015
 VID task. It introduces many fixes and improvements.
 
-== INSTALLATION ===============================================================
+## INSTALLATION ##
 
 Note: VATIC has only been tested on Ubuntu with Apache 2.2 HTTP server and a
 MySQL server. This document will describe installation on this platform,
 however it should work any operating system and with any server.
 
---- Download ------------------------------------------------------------------
+### Download ###
 
-You can download and extract VATIC from our website. Note: do NOT run the 
-installer as root. 
+You can download and extract VATIC from our website. Note: do NOT run the
+installer as root.
 
     $ wget https://raw.githubusercontent.com/weiliu89/vatic/vid/vatic-install.sh
     $ chmod +x vatic-install.sh
     $ ./vatic-install.sh
     $ cd vatic
 
---- HTTP Server Configuration -------------------------------------------------
+### HTTP Server Configuration ###
 
 Make sure you have the mod_headers module enabled:
 
@@ -73,7 +73,7 @@ After making these changes, restart Apache:
 
     $ sudo apache2ctl graceful
 
---- SQL Server Configuration --------------------------------------------------
+### SQL Server Configuration ###
 
 We recommend creating a separate database specifically for VATIC:
 
@@ -89,7 +89,7 @@ replace the user/pass to something meaningful to you.
 
 The next section will automatically create the necessary tables.
 
---- Setup ---------------------------------------------------------------------
+### Setup ###
 
 Inside the vatic directory, copy config.py-example to config.py:
 
@@ -136,7 +136,7 @@ public/turkic/javascript.js from:
 to
     var url = location.protocol + "//" + location.hostname + "/vatic-server/" + action;
 
-== ANNOTATION =================================================================
+## ANNOTATION ##
 
 Before you continue, you should verify that the installation was correct. You
 can verify this with:
@@ -148,16 +148,16 @@ and you should review the previous section. Note: If you do not plan on
 using Mechanical Turk, you can safely ignore any errors caused by Mechanical
 Turk.
 
---- Frame Extraction ----------------------------------------------------------
+### Frame Extraction ###
 
-Our system requires that videos are extracted into JPEG frames. Our tool can 
+Our system requires that videos are extracted into JPEG frames. Our tool can
 do this automatically for you:
 
     $ mkdir /path/to/output/directory
     $ turkic extract /path/to/video.mp4 /path/to/output/directory
 
 By default, our tool will resize the frames to fit within a 720x480 rectangle.
-We believe this resolution is ideal for online video viewing. You can change 
+We believe this resolution is ideal for online video viewing. You can change
 resolution with options:
 
     $ turkic extract /path/to/video.mp4 /path/to/output/directory
@@ -188,9 +188,9 @@ The above command will look all the files ended with .JPEG in /path/to/frames
 and resize them to maximum width 1000 and maximum height to 1000 (aspect ratio
 will remain the same).
 
---- Importing a Video ---------------------------------------------------------
+### Importing a Video ###
 
-After extracting frames, the video can be imported into our tool for 
+After extracting frames, the video can be imported into our tool for
 annotation. The general syntax for this operation is:
 
     $ turkic load identifier /path/to/output/directory Label1 Label2 LabelN
@@ -223,7 +223,7 @@ options available as well. We recommend using these options.
     Qualification Options
         --min-approved-percent  Minimum percent of tasks the worker must have
                                 approved before they can work for you
-        --min-approved-amount   Minimum number of tasks that the worker must 
+        --min-approved-amount   Minimum number of tasks that the worker must
                                 have completed before they can work for you
 
     Video Options
@@ -248,13 +248,13 @@ or "sitting". You can specify attributes the same way as labels, except you
 prepend an ~ before the text, which bind the attribute to the previous label:
 
     $ turkic load identifier /path/to/output/directory Label1 ~Attr1A ~Attr1B
-      Label2 ~Attr2A ~Attr2B ~Attr2C Label3 
+      Label2 ~Attr2A ~Attr2B ~Attr2C Label3
 
 In the above example, Label1 will have attributes Attr1A and Attr1B, Label2
-will have attributes Attr2B, Attr2B, and Attr2C and Label3 will have no 
+will have attributes Attr2B, Attr2B, and Attr2C and Label3 will have no
 attributes. Specifying attributes is optional.
 
---- Gold Standard Training ---------------------------------------------------
+### Gold Standard Training ###
 
 It turns out that video annotation is extremely challenging and most MTurk
 workers lack the necessary patience. For this reason, we recommend requiring
@@ -277,9 +277,9 @@ options are as follows:
     --for-training              Specifies that this video is gold standard
     --for-training-start        Specifies the first frame to use
     --for-training-stop         Specifies the last frame to use
-    --for-training-overlap      Percent overlap that worker's boxes must match 
+    --for-training-overlap      Percent overlap that worker's boxes must match
     --for-training-tolerance    Percent that annotations must agree temporally
-    --for-training-mistakes     The number of completely wrong annotations 
+    --for-training-mistakes     The number of completely wrong annotations
                                 allowed. We recommend setting this to a small,
                                 nonzero integer.
 
@@ -295,11 +295,11 @@ You can now specify that a video should use a gold standard video:
 When a not-yet-seen worker visits this video, they will now be redirected to
 to the training video and be required to pass the evaluation test first.
 
---- Publishing Tasks ---------------------------------------------------------
+### Publishing Tasks ###
 
-When you are ready for the MTurk workers to annotate, you must publish the 
+When you are ready for the MTurk workers to annotate, you must publish the
 tasks, which will allow workers to start annotating:
-    
+
     $ turkic publish
 
 You can limit the number of tasks that are published:
@@ -308,7 +308,7 @@ You can limit the number of tasks that are published:
 
 Running above command repeatedly will launch tasks in batches of 100. You can
 also disable all pending tasks:
-    
+
     $ turkic publish --disable
 
 which will "unpublish" tasks that have not yet been completed.
@@ -319,11 +319,11 @@ the command:
     $ turkic publish --offline
 
 Note: for the above command to work, you must have loaded the video with the
---offline parameter as well: 
+--offline parameter as well:
 
     $ turkic load identifier /path/to/frames Person --offline
 
---- Checking the Status ------------------------------------------------------
+### Checking the Status ###
 
 You can check the status of the video annotation server with the command:
 
@@ -342,7 +342,7 @@ When all the videos are annotated, the last line will read:
 
     Server is offline.
 
---- Retrieving Annotations ---------------------------------------------------
+### Retrieving Annotations ###
 
 You can get all the annotations for a video with the command:
 
@@ -398,7 +398,7 @@ The command can also output to many different formats. Available formats are:
 
 The specifications for these formats should be self explanatory.
 
---- Visualizing Videos -------------------------------------------------------
+### Visualizing Videos ###
 
 You can preview the annotations by visualizing the results:
 
@@ -422,7 +422,7 @@ specify the --labels option:
 
     $ turkic visualize identifier /tmp --labels
 
---- Compensating Workers -----------------------------------------------------
+### Compensating Workers ###
 
 When you are ready, you can compensate workers:
 
@@ -432,7 +432,7 @@ which will pay all workers for all outstanding tasks. We strongly recommend
 paying all workers regardless of their quality. You should attempt to pay
 workers at least once per day.
 
---- Finding Jobs -------------------------------------------------------------
+### Finding Jobs ###
 
 If you have found a small mistake in a video and want to make
 the correction yourself, you can start an annotation session initialized with
@@ -465,7 +465,7 @@ HIT ID, you can use the find command:
 
     $ turkic find --hitid HITID
 
---- Quality Control ----------------------------------------------------------
+### Quality Control ###
 
 The gold standard does a "pretty good" job of weeding out bad workers.
 Nonetheless, there will always be bad workers that we must identify and
@@ -501,7 +501,7 @@ You can also invalidate and respawn individual jobs with the command:
     $ turkic invalidate --hit hitid
 
 
---- Listing all Videos -------------------------------------------------------
+### Listing all Videos ###
 
 You can retrieve a list of all videos in the system with:
 
@@ -529,7 +529,7 @@ If you want statistics about each video, then give the --stats option:
 
     $ turkic list --stats
 
---- Managing Workers ---------------------------------------------------------
+### Managing Workers ###
 
 You can list all known workers with the command:
 
@@ -545,20 +545,20 @@ You can also search for workers by the first few letters of their ID:
 
     $ turkic workers --search A3M
 
---- Deleting a Video ---------------------------------------------------------
+### Deleting a Video ###
 
 You can delete a video at any time with:
 
     $ turkic delete identifier
 
-If the video has already been annotated (even partially), this command will 
+If the video has already been annotated (even partially), this command will
 warn you and abort. You can force deletion with:
 
     $ turkic delete identifier --force
 
 which will REMOVE ALL DATA AND CANNOT BE UNDONE.
 
-== REFERENCES =================================================================
+## REFERENCES ##
 
 When using our system, please cite:
 
@@ -566,7 +566,7 @@ When using our system, please cite:
     Crowdsourced Video Annotation" International Journal of Computer Vision
     (IJCV). June 2012.
 
-== FEEDBACK AND BUGS ==========================================================
+## FEEDBACK AND BUGS ##
 
 Please direct all comments and report all bugs to:
 
