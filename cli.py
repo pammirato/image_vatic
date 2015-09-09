@@ -124,6 +124,7 @@ class load(LoadCommand):
         parser.add_argument("--per-object-bonus", type=float)
         parser.add_argument("--completion-bonus", type=float)
         parser.add_argument("--use-frames", default = None)
+        parser.add_argument("--use-all", default = None)
         parser.add_argument("--start-frame", type = int, default = 0)
         parser.add_argument("--stop-frame", type = int, default = None)
         parser.add_argument("--train-with")
@@ -299,6 +300,11 @@ class load(LoadCommand):
                         job = Job(segment = segment, group = group)
                         session.add(segment)
                         session.add(job)
+        elif args.use_all:
+          segment = Segment(start = 0, stop = video.totalframes - 1, video = video)
+          job = Job(segment = segment, group = group)
+          session.add(segment)
+          session.add(job)
         else:
             startframe = args.start_frame
             stopframe = args.stop_frame
