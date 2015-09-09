@@ -97,10 +97,10 @@ class formatframes(Command):
             file = os.path.join(args.video, file)
             if args.no_resize:
                 try:
-                    os.link(file, path)
+                    os.symlink(file, path)
                 except OSError:
                     os.makedirs(os.path.dirname(path))
-                    os.link(file, path)
+                    os.symlink(file, path)
             else:
                 image = Image.open(file)
                 image.thumbnail((args.width, args.height), Image.BILINEAR)
