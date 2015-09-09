@@ -72,7 +72,7 @@ class formatframes(Command):
         parser.add_argument("--extension", default="jpg")
         parser.add_argument("--width", default=720, type=int)
         parser.add_argument("--height", default=480, type=int)
-        parser.add_argument("--no-resize",
+        parser.add_argument("--resize",
             action="store_true", default = False)
         parser.add_argument("--no-cleanup",
             action="store_true", default=False)
@@ -95,13 +95,7 @@ class formatframes(Command):
         for frame, file in files:
             path = Video.getframepath(frame, args.output)
             file = os.path.join(args.video, file)
-            if args.no_resize:
-                try:
-                    os.symlink(file, path)
-                except OSError:
-                    os.makedirs(os.path.dirname(path))
-                    os.symlink(file, path)
-            else:
+            if args.resize:
                 image = Image.open(file)
                 image.thumbnail((args.width, args.height), Image.BILINEAR)
                 try:
@@ -109,6 +103,12 @@ class formatframes(Command):
                 except IOError:
                     os.makedirs(os.path.dirname(path))
                     image.save(path)
+            else:
+                try:
+                    os.symlink(file, path)
+                except OSError:
+                    os.makedirs(os.path.dirname(path))
+                    os.symlink(file, path)
         print "Formatted {0} frames".format(len(files))
 
 @handler("Imports a set of video frames")
