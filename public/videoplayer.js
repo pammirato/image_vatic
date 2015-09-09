@@ -101,7 +101,7 @@ function VideoPlayer(handle, job)
 
         var url = this.job.frameurl(this.frame);
         this.handle.css("background-image", "url('" + url + "')");
-
+	this.handle.css("background-size", "contain"); // ME: make sure bg fills entirely the element (used together with guiscale)
         this._callback(this.onupdate);
     }
 
