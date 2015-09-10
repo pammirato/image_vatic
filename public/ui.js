@@ -27,21 +27,43 @@ function ui_setup(job)
 {
     var screen = $("<div id='annotatescreen'></div>").appendTo(container);
 
-    $("<table>" + 
+    $("<table>" +
         "<tr>" +
             "<td><div id='instructionsbutton' class='button'>Instructions</div><div id='instructions'>Annotate every object, even stationary and obstructed objects, for the entire video.</td>" +
             "<td><div id='topbar'></div></td>" +
         "</tr>" +
         "<tr>" +
-              "<td><div id='videoframe'></div></td>" + 
+              "<td><div id='videoframe'></div></td>" +
               "<td rowspan='2'><div id='sidebar'></div></td>" +
-          "</tr>" + 
+          "</tr>" +
           "<tr>" +
-              "<td><div id='bottombar'></div></td>" + 
+              "<td><div id='bottombar'></div></td>" +
           "</tr>" +
           "<tr>" +
               "<td><div id='advancedoptions'></div></td>" +
               "<td><div id='submitbar'></div></td>" +
+          "</tr>" +
+          "<tr>" +
+              "<td>" +
+              "<div id='keyboardshortcuts'>" +
+                  "Keyboard Shortcuts:" +
+                  "<ul class='keyboardshortcuts' display='inline' >" +
+                  "<li><code>t/y</code>  toggles play/pause on the video</li>" +
+                  "<li><code>r/u</code>  rewinds the video to the start</li>" +
+                  "<li><code>e/i</code>  creates a new object</li>" +
+                  "<li><code>f/j</code>  jump forward 5 frames</li>" +
+                  "<li><code>d/k</code>  jump backward 5 frames</li>" +
+                  "<li><code>v/n</code>  step forward 1 frame</li>" +
+                  "<li><code>c/m</code>  step backward 1 frame</li>" +
+                  "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
+                  "<li><code>w/o</code>  toggles hide labels</li>" +
+                  "<li><code>q/p</code>  toggles disable resize</li>" +
+                  "</ul>" +
+              "</div> " +
+              "<div id='comments'>" +
+                  "Comments (if any):<textarea id='commentarea'/>" +
+              "</div>" +
+              "</td>" +
           "</tr>" +
       "</table>").appendTo(screen).css("width", "100%");
 
@@ -51,6 +73,21 @@ function ui_setup(job)
                           "height": job.height + "px",
                           "margin": "0 auto"})
                     .parent().css("width", playerwidth + "px");
+
+    $("#keyboardshortcuts").css({"width": 400 + "px",
+                                 "margin": "0 auto",
+                                 "float": "left"});
+
+    $("#comments").css({"width": 300 + "px",
+                        "margin": "0 auto",
+                        "float": "right"});
+
+    $("#commentarea").css({"width": 300 + "px",
+                           "height": 150 + "px",
+                           "margin": "15 auto",
+                           "padding-left": "15 px",
+                           "vertical-align": "middle",
+                           "resize": "none"});
 
     $("#sidebar").css({"height": job.height + "px",
                        "width": "205px"});
@@ -65,6 +102,8 @@ function ui_setup(job)
         "<div class='button' id='newobjectbutton'>New Object</div></div>");
 
     $("<div id='objectcontainer'></div>").appendTo("#sidebar");
+
+    $("#commentarea").val(job.comment);
 
     $("<div class='button' id='openadvancedoptions'>Options</div>")
         .button({
@@ -117,7 +156,7 @@ function ui_setupbuttons(job, player, tracks)
 {
     $("#instructionsbutton").click(function() {
         player.pause();
-        ui_showinstructions(job); 
+        ui_showinstructions(job);
     }).button({
         icons: {
             primary: "ui-icon-newwin"
@@ -209,6 +248,36 @@ function ui_setupbuttons(job, player, tracks)
         eventlog("speedcontrol", "FPS = " + player.fps + " and delta = " + player.playdelta);
     });
 
+    $("#commentarea").focusin(function() {
+        console.log("ui disabled");
+        ui_disable();
+    });
+
+    String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g,"");
+    }
+    String.prototype.ltrim = function() {
+        return this.replace(/^\s+/,"");
+    }
+    String.prototype.rtrim = function() {
+        return this.replace(/\s+$/,"");
+    }
+
+    String.prototype.removelinebreak = function() {
+        return this.replace(/(\r\n|\n|\r)/gm,"  ");
+    }
+
+    String.prototype.delquote = function() {
+        return this.replace(/["']{1}/gi,"&quot;");
+    }
+
+    $("#commentarea").focusout(function() {
+        console.log("ui enabled");
+        job.comment = $(this).val();
+        console.log("comment added:" + job.comment);
+        ui_enable();
+    });
+
     $("#annotateoptionsresize").button().click(function() {
         var resizable = $(this).attr("checked") ? false : true;
         tracks.resizable(resizable);
@@ -254,6 +323,12 @@ function ui_setupbuttons(job, player, tracks)
 function ui_setupkeyboardshortcuts(job, player)
 {
     $(window).keypress(function(e) {
+        var target = e.target || e.srcElement;
+        if (target.tagName == "TEXTAREA")
+        {
+            return;
+        }
+
         console.log("Key press: " + e.keyCode);
 
         if (ui_disabled)
@@ -264,40 +339,58 @@ function ui_setupkeyboardshortcuts(job, player)
 
         var keycode = e.keyCode ? e.keyCode : e.which;
         eventlog("keyboard", "Key press: " + keycode);
-        
-        if (keycode == 32 || keycode == 112 || keycode == 116 || keycode == 98)
+
+        if (keycode == 32 || keycode == 116 || keycode == 121)
         {
+            // 32 ==> space, 116 ==> t, 121 ==> y
             $("#playbutton").click();
         }
-        if (keycode == 114)
+        if (keycode == 114 || keycode == 117)
         {
+            // 114 ==> r, 117 ==>u
             $("#rewindbutton").click();
         }
-        else if (keycode == 110)
+        else if (keycode == 101 || keycode == 105)
         {
+            // 101 ==> e, 105 ==>i
             $("#newobjectbutton").click();
         }
-        else if (keycode == 104)
+        else if (keycode == 98)
         {
+            // 98 ==> b
             $("#annotateoptionshideboxes").click();
         }
-        else 
+        else if (keycode == 119 || keycode == 111)
+        {
+            // 119 ==> w, 111 ==> o
+            $("#annotateoptionshideboxtext").click();
+        }
+        else if (keycode == 113 || keycode == 112)
+        {
+            // 113 ==> q, 112 ==> p
+            $("#annotateoptionsresize").click();
+        }
+        else
         {
             var skip = 0;
-            if (keycode == 44 || keycode == 100)
+            if (keycode == 107 || keycode == 100)
             {
-                skip = job.skip > 0 ? -job.skip : -10;
+                // 107 ==> k, 100 ==>d
+                skip = job.skip > 0 ? -job.skip : -5;
             }
-            else if (keycode == 46 || keycode == 102)
+            else if (keycode == 106 || keycode == 102)
             {
-                skip = job.skip > 0 ? job.skip : 10;
+                // 106 ==> j, 102 ==>f
+                skip = job.skip > 0 ? job.skip : 5;
             }
-            else if (keycode == 62 || keycode == 118)
+            else if (keycode == 110 || keycode == 118)
             {
+                // 106 ==> n, 118 ==>v
                 skip = job.skip > 0 ? job.skip : 1;
             }
-            else if (keycode == 60 || keycode == 99)
+            else if (keycode == 109 || keycode == 99)
             {
+                // 109 ==> m, 99 ==>c
                 skip = job.skip > 0 ? -job.skip : -1;
             }
 
@@ -315,7 +408,7 @@ function ui_setupkeyboardshortcuts(job, player)
 
 function ui_canresize()
 {
-    return !$("#annotateoptionsresize").attr("checked"); 
+    return !$("#annotateoptionsresize").attr("checked");
 }
 
 function ui_areboxeshidden()
@@ -346,7 +439,7 @@ function ui_setupslider(player)
 
     slider.css({
         marginTop: "6px",
-        width: parseInt(slider.parent().css("width")) - 200 + "px", 
+        width: parseInt(slider.parent().css("width")) - 200 + "px",
         float: "right"
     });
 
@@ -444,7 +537,9 @@ function ui_setupsubmit(job, tracks)
 function ui_submit(job, tracks)
 {
     console.dir(tracks);
-    console.log("Start submit - status: " + tracks.serialize());
+
+    completeinfo = "[[\"" + job.comment + "\"]," + tracks.serialize() + "]";
+    console.log("Start submit - status: " + completeinfo);
 
     if (!mturk_submitallowed())
     {
@@ -454,7 +549,7 @@ function ui_submit(job, tracks)
 
     /*if (mturk_isassigned() && !mturk_isoffline())
     {
-        if (!window.confirm("Are you sure you are ready to submit? Please " + 
+        if (!window.confirm("Are you sure you are ready to submit? Please " +
                             "make sure that the entire video is labeled and " +
                             "your annotations are tight.\n\nTo submit, " +
                             "press OK. Otherwise, press Cancel to keep " +
@@ -471,7 +566,7 @@ function ui_submit(job, tracks)
 
     function validatejob(callback)
     {
-        server_post("validatejob", [job.jobid], tracks.serialize(),
+        server_post("validatejob", [job.jobid], completeinfo,
             function(valid) {
                 if (valid)
                 {
@@ -495,11 +590,11 @@ function ui_submit(job, tracks)
             callback();
         });
     }
-    
+
     function savejob(callback)
     {
         server_post("savejob", [job.jobid],
-            tracks.serialize(), function(data) {
+            completeinfo, function(data) {
                 callback()
             });
     }
@@ -558,7 +653,7 @@ function ui_submit_failedvalidation()
 
     h.append("<h1>Low Quality Work</h1>");
     h.append("<p>Sorry, but your work is low quality. We would normally <strong>reject this assignment</strong>, but we are giving you the opportunity to correct your mistakes since you are a new user.</p>");
-    
+
     h.append("<p>Please review the instructions, double check your annotations, and submit again. Remember:</p>");
 
     var str = "<ul>";

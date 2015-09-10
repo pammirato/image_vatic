@@ -57,7 +57,7 @@ function instructions(job, h)
     h.append("<p>If there are many objects on the screen, it can become difficult to select the right bounding box. By pressing the lock button <img src='lock.jpg'> on an object's sidebar rectangle, you can prevent changes to that track. Press the lock button again to renable modifications.</p>");
 
     h.append("<p>Remembering which box correspond to which box can be confusing. If you click on a box in the view screen, a tooltip will pop that will attempt to remind you of the box's identity.</p>");
-    
+
     h.append("<p>When you are ready to submit your work, rewind the video and watch it through one more time. Does each rectangle follow the object it is tracking for the entire sequence? If you find a spot where it misses, press <strong>Pause</strong> and adjust the box. After you have checked your work, press the <strong>Submit HIT</strong> button. We will pay you as soon as possible.</p>");
 
     h.append("<h2>How We Accept Your Work</h2>");
@@ -108,14 +108,16 @@ function instructions(job, h)
 
     h.append("<h3>Keyboard Shortcuts</h3>");
     h.append("<p>These keyboard shortcuts are available for your convenience:</p>");
-    h.append('<ul class="keyboardshortcuts">' +
-        '<li><code>n</code> creates a new object</li>' +
-        '<li><code>t</code> toggles play/pause on the video</li>' +
-        '<li><code>r</code> rewinds the video to the start</li>' +
-        '<li><code>h</code> hides/shows the boxes (only after clicking Options button)</li>' +
-        '<li><code>d</code> jump the video forward a bit</li>' +
-        '<li><code>f</code> jump the video backward a bit</li>' +
-        '<li><code>v</code> step the video forward a tiny bit</li>' +
-        '<li><code>c</code> step the video backward a tiny bit</li>' +
+    h.append("<ul class='keyboardshortcuts' display='inline' >" +
+        "<li><code>t/y</code>  toggles play/pause on the video</li>" +
+        "<li><code>r/u</code>  rewinds the video to the start</li>" +
+        "<li><code>e/i</code>  creates a new object</li>" +
+        "<li><code>f/j</code>  jump forward 10 frames</li>" +
+        "<li><code>d/k</code>  jump backward 10 frames</li>" +
+        "<li><code>v/n</code>  step forward 1 frame</li>" +
+        "<li><code>c/m</code>  step backward 1 frame</li>" +
+        "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
+        "<li><code>w/o</code>  toggles hide labels</li>" +
+        "<li><code>q/p</code>  toggles disable resize</li>" +
         '</ul>');
 }

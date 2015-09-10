@@ -25,6 +25,7 @@ installer as root.
     $ chmod +x vatic-install.sh
     $ ./vatic-install.sh
     $ cd vatic
+    $ git checkout vid
 
 ### HTTP Server Configuration ###
 
@@ -560,7 +561,7 @@ which will REMOVE ALL DATA AND CANNOT BE UNDONE.
 
 ## REFERENCES ##
 
-When using our system, please cite:
+When using the system, please cite:
 
     Carl Vondrick, Donald Patterson, Deva Ramanan. "Efficiently Scaling Up
     Crowdsourced Video Annotation" International Journal of Computer Vision
@@ -570,7 +571,7 @@ When using our system, please cite:
 
 Please direct all comments and report all bugs to:
 
-    Carl Vondrick
-    vondrick@mit.edu
+    Wei Liu
+    wliu@cs.unc.edu
 
 Thanks for using our system!

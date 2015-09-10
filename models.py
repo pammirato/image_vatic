@@ -128,6 +128,7 @@ class Job(turkic.models.HIT):
                                   backref = backref("jobs",
                                                     cascade = "all,delete"))
     istraining     = Column(Boolean, default = False)
+    comment        = Column(Text)
 
     def getpage(self):
         return "?id={0}".format(self.id)
@@ -173,7 +174,7 @@ class Job(turkic.models.HIT):
         return self.segment.video.trainvalidator
 
     @property
-    def cost(self): 
+    def cost(self):
         if not self.completed:
             return 0
         return self.bonusamount + self.group.cost + self.donatedamount
@@ -183,7 +184,7 @@ class Job(turkic.models.HIT):
 
 class Path(turkic.database.Base):
     __tablename__ = "paths"
-    
+
     id = Column(Integer, primary_key = True)
     jobid = Column(Integer, ForeignKey(Job.id))
     job = relationship(Job, backref = backref("paths", cascade="all,delete"))
@@ -209,7 +210,7 @@ class Path(turkic.database.Base):
 
         return result
 
-    @classmethod 
+    @classmethod
     def bindattributes(cls, attributes, boxes):
         attributes = sorted(attributes, key = lambda x: x.frame)
 
@@ -283,7 +284,7 @@ class PerObjectBonus(turkic.models.BonusSchedule):
     __tablename__ = "per_object_bonuses"
     __mapper_args__ = {"polymorphic_identity": "per_object_bonuses"}
 
-    id = Column(Integer, ForeignKey(turkic.models.BonusSchedule.id), 
+    id = Column(Integer, ForeignKey(turkic.models.BonusSchedule.id),
         primary_key = True)
     amount = Column(Float, default = 0.0, nullable = False)
 

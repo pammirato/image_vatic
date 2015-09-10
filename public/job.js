@@ -4,21 +4,22 @@ function Job(data)
 
     this.slug = null;
     this.start = null;
-    this.stop = null; 
-    this.width = null; 
-    this.height = null; 
-    this.skip = null; 
+    this.stop = null;
+    this.width = null;
+    this.height = null;
+    this.skip = null;
     this.perobject = null;
     this.completion = null;
     this.blowradius = null;
     this.thisid = null;
     this.labels = null;
+    this.comment = null;
 
     this.frameurl = function(i)
     {
         folder1 = parseInt(Math.floor(i / 100));
         folder2 = parseInt(Math.floor(i / 10000));
-        return "frames/" + me.slug + 
+        return "frames/" + me.slug +
             "/" + folder2 + "/" + folder1 + "/" + parseInt(i) + ".jpg";
     }
 }
@@ -50,6 +51,9 @@ function job_import(data)
     job.attributes = data["attributes"];
     job.training = parseInt(data["training"]);
     job.minplayerwidth = minplayerwidth;
+    job.comment = data["comment"];
+    if(job.comment == "NULL" || job.comment == "null")
+        job.comment = null;
 
     console.log("Job configured!");
     console.log("  Slug: " + job.slug);
@@ -76,6 +80,7 @@ function job_import(data)
             console.log("    " + job.labels[i] + " = " + job.attributes[i][j])
         }
     }
+    console.log("  Comment: " + job.comment);
 
     return job;
 }

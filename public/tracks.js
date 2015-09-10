@@ -196,7 +196,7 @@ function BoxDrawer(container)
     }
 
     /*
-     * Completes drawing the box. This will remove the visualization, so you will 
+     * Completes drawing the box. This will remove the visualization, so you will
      * have to redraw it.
      */
     this.finishdrawing = function(xc, yc)
@@ -219,7 +219,7 @@ function BoxDrawer(container)
             this.starty = 0;
         }
     }
-    
+
     /*
      * Cancels the current drawing.
      */
@@ -244,7 +244,7 @@ function BoxDrawer(container)
 
     container.mousedown(function(e) {
         ignoremouseup = true;
-        window.setTimeout(function() { 
+        window.setTimeout(function() {
             ignoremouseup = false;
         }, 500);
 
@@ -289,7 +289,7 @@ function TrackCollection(player, job)
     this.job = job;
     this.tracks = [];
 
-    this.onnewobject = []; 
+    this.onnewobject = [];
 
     player.onupdate.push(function() {
         me.update(player.frame);
@@ -404,7 +404,7 @@ function TrackCollection(player, job)
         }
         return count;
     }
-    
+
     this.recordposition = function()
     {
         for (var i in this.tracks)
@@ -484,7 +484,7 @@ function Track(player, color, position)
 
     this.journal.mark(this.player.job.start,
         new Position(position.xtl, position.ytl,
-                     position.xbr, position.ybr, 
+                     position.xbr, position.ybr,
                      false, true, []));
 
     this.journal.mark(this.player.frame, position);
@@ -586,7 +586,7 @@ function Track(player, color, position)
         }
 
         var xtl = Math.max(pos.xtl, 0);
-        var ytl = Math.max(pos.ytl, 0); 
+        var ytl = Math.max(pos.ytl, 0);
         var xbr = Math.min(pos.xbr, width - 1);
         var ybr = Math.min(pos.ybr, height - 1);
 
@@ -622,7 +622,7 @@ function Track(player, color, position)
     this.setocclusion = function(value)
     {
         if (value)
-        {   
+        {
             console.log("Marking object as occluded here.");
         }
         else
@@ -648,7 +648,7 @@ function Track(player, color, position)
     this.setoutside = function(value)
     {
         if (value)
-        {   
+        {
             console.log("Marking object as outside here.");
         }
         else
@@ -679,7 +679,7 @@ function Track(player, color, position)
     {
         for (var i in attributes)
         {
-            var journal = new Journal(this.player.job.start, 
+            var journal = new Journal(this.player.job.start,
                                       this.player.job.blowradius);
             journal.mark(this.player.job.start, false);
             //journal.artificialright = journal.rightmost();
@@ -752,7 +752,7 @@ function Track(player, color, position)
     }
 
     /*
-     * Draws the current box on the screen. 
+     * Draws the current box on the screen.
      */
     this.draw = function(frame, position)
     {
@@ -801,9 +801,9 @@ function Track(player, color, position)
                     me.notifystartupdate();
                     //me.triggerinteract();
                 },
-                stop: function() { 
+                stop: function() {
                     me.fixposition();
-                    me.recordposition();                
+                    me.recordposition();
                     me.notifyupdate();
                     eventlog("draggable", "Drag-n-drop a box");
                 },
@@ -841,7 +841,7 @@ function Track(player, color, position)
         }
 	if (this.wasannot == false )
 	    this.handle.css("background-image", "");
-	else 
+	else
 	    this.handle.css("background-image", 'url("diagonals.png")');
 
         if (position.outside)
@@ -851,7 +851,7 @@ function Track(player, color, position)
         }
 
         this.handle.show();
-        
+
         if (position.occluded)
         {
             this.handle.addClass("boundingboxoccluded");
@@ -871,7 +871,7 @@ function Track(player, color, position)
         });
     }
 
-    this.triggerinteract = function() 
+    this.triggerinteract = function()
     {
         if (!this.locked && !this.drawingnew)
         {
@@ -918,7 +918,7 @@ function Track(player, color, position)
         {
             this.handle.resizable("option", "disabled", true);
         }
-    }   
+    }
 
     this.visible = function(value)
     {
@@ -1068,7 +1068,7 @@ function Journal(start, blowradius)
     /*
      * Marks the boxes position.
      */
-    this.mark = function(frame, position) 
+    this.mark = function(frame, position)
     {
         console.log("Marking " + frame);
 
@@ -1095,7 +1095,7 @@ function Journal(start, blowradius)
         this.annotations[frame] = position;
     }
 
-    
+
     this.bounds = function(frame)
     {
         if (this.annotations[frame])
@@ -1119,7 +1119,7 @@ function Journal(start, blowradius)
 
             if (itemtime <= frame)
             {
-                if (left == null || itemtime > lefttime) 
+                if (left == null || itemtime > lefttime)
                 {
                     left = item;
                     lefttime = itemtime;;

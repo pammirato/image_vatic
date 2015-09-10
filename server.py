@@ -48,7 +48,8 @@ def getjob(id, verified):
             "jobid":        job.id,
             "training":     int(training),
             "labels":       labels,
-            "attributes":   attributes}
+            "attributes":   attributes,
+            "comment":      job.comment}
 
 @handler()
 def getboxesforjob(id):
@@ -68,7 +69,7 @@ def readpaths(tracks):
     for label, track, attributes in tracks:
         path = Path()
         path.label = session.query(Label).get(label)
-        
+
         logger.debug("Received a {0} track".format(path.label.text))
 
         visible = False
@@ -103,8 +104,14 @@ def readpaths(tracks):
     return paths
 
 @handler(post = "json")
-def savejob(id, tracks):
+def savejob(id, data):
     job = session.query(Job).get(id)
+
+    # data contains comment and tracks
+    job.comment = data[0][0]
+    if job.comment == "null":
+        job.comment = "NULL"
+    tracks = data[1]
 
     for path in job.paths:
         session.delete(path)
@@ -116,8 +123,12 @@ def savejob(id, tracks):
     session.commit()
 
 @handler(post = "json")
-def validatejob(id, tracks):
+def validatejob(id, data):
     job = session.query(Job).get(id)
+
+    # data contains comment and tracks
+    tracks = data[1]
+
     paths = readpaths(tracks)
 
     return job.trainingjob.validator(paths, job.trainingjob.paths)
