@@ -5,7 +5,7 @@ sudo easy_install -U numpy
 sudo pip install cython==0.20
 
 git clone https://github.com/weiliu89/turkic.git
-git clone https://github.com/cvondrick/pyvision.git
+git clone https://github.com/weiliu89/pyvision.git
 git clone https://github.com/weiliu89/vatic.git
 
 cd turkic
