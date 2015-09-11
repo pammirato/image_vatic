@@ -50,8 +50,11 @@ function ui_setup(job)
               "<td><div id='videoframe'></div></td>" +
               "<td rowspan='2'><div id='sidebar'></div></td>" +
           "</tr>" +
+        "<tr style='height: 1px;'>" +
+        "</tr>" +
           "<tr>" +
               "<td><div id='bottombar'></div></td>" +
+              "<td><div id='frameinfobar'></div></td>" +
           "</tr>" +
           "<tr>" +
               "<td><div id='advancedoptions'></div></td>" +
@@ -92,6 +95,13 @@ function ui_setup(job)
                        "width": "205px"});
 
     $("#annotatescreen").css("width", (playerwidth + 205) + "px");
+
+    $("#frameinfobar").css({"width": "150px",
+                            "padding-left": "20px"});
+    $("#frameinfobar").append("<div style='float: left;'><strong>Frame: </strong></div><div id='frameinfo'></div>");
+    $("#frameinfo").css({"width": "30px",
+                         "padding-left": "10px",
+                         "float": "left"});
 
     $("#bottombar").append("<div id='playerslider'></div>");
     $("#bottombar").append("<div class='button' id='rewindbutton'>Rewind</div> ");

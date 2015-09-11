@@ -135,38 +135,38 @@ function BoxDrawer(container)
      */
     this.calculateposition = function(xc, yc)
     {
-	var xside = Math.abs(this.startx - xc);
-	var yside = Math.abs(this.starty-yc);
-	if (window.event.shiftKey)
-	{
-	    var squareside = Math.min(xside,yside);
-	    if (xc > this.startx)
-		xc = this.startx + squareside;
-  	    else
-		xc = this.startx - squareside;
-	    if (yc > this.starty)
-		yc = this.starty + squareside;
-	    else
-		yc = this.starty - squareside;
-	    xside = squareside;
-  	    yside = squareside;
-	}
+        var xside = Math.abs(this.startx - xc);
+        var yside = Math.abs(this.starty - yc);
+        if (window.event.shiftKey)
+        {
+            var squareside = Math.min(xside, yside);
+            if (xc > this.startx)
+              xc = this.startx + squareside;
+            else
+              xc = this.startx - squareside;
+            if (yc > this.starty)
+              yc = this.starty + squareside;
+            else
+              yc = this.starty - squareside;
+            xside = squareside;
+            yside = squareside;
+        }
 
-	var xtl, ytl, xbr, ybr;
-	if (window.event.ctrlKey)
-	{
+        var xtl, ytl, xbr, ybr;
+        if (window.event.ctrlKey)
+        {
             xtl = this.startx - xside/2.0;
             ytl = this.starty - yside/2.0;
             xbr = this.startx + xside/2.0;
             ybr = this.starty + yside/2.0;
-	}
-	else
-	{
+        }
+        else
+        {
             xtl = Math.min(xc, this.startx);
             ytl = Math.min(yc, this.starty);
             xbr = Math.max(xc, this.startx);
             ybr = Math.max(yc, this.starty);
-	}
+        }
         return new Position(xtl, ytl, xbr, ybr)
     }
 
@@ -447,8 +447,8 @@ function getUrlVars()
     for(var i = 0; i < hashes.length; i++)
     {
         hash = hashes[i].split('=');
-	vars.push(hash[0]);
-	vars[hash[0]] = hash[1];
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
     }
     return vars;
 }
@@ -494,14 +494,14 @@ function Track(player, color, position)
 
     this.getClippingFlag = function()
     {
-    	var clipping =  getUrlVars()["clipping"];
-	if (clipping === 'true' || clipping === '1')
-		return true;
-	else if (clipping === 'false' || clipping === '0')
-		return false;
-	else
-		console.warn("incorrect value of clipping GET variable");
-	return true; // in case clipping == null or is different from {true,1,false,0}
+        var clipping =  getUrlVars()["clipping"];
+        if (clipping === 'true' || clipping === '1')
+            return true;
+        else if (clipping === 'false' || clipping === '0')
+            return false;
+        else
+            return true; // in case clipping == null or is different from {true,1,false,0}
+            // console.warn("incorrect value of clipping GET variable");
      }
     this.clipping = this.getClippingFlag();
 

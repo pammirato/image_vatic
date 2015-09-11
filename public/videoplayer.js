@@ -14,8 +14,8 @@ function VideoPlayer(handle, job)
     this.fps = 30;
     this.playdelta = 1;
 
-    this.onplay = []; 
-    this.onpause = []; 
+    this.onplay = [];
+    this.onpause = [];
     this.onupdate = [];
 
     /*
@@ -101,8 +101,12 @@ function VideoPlayer(handle, job)
 
         var url = this.job.frameurl(this.frame);
         this.handle.css("background-image", "url('" + url + "')");
-	this.handle.css("background-size", "contain"); // ME: make sure bg fills entirely the element (used together with guiscale)
+        this.handle.css("background-repeat", "no-repeat");
+        this.handle.css("background-size", "contain"); // ME: make sure bg fills entirely the element (used together with guiscale)
+
         this._callback(this.onupdate);
+        var element = document.getElementById("frameinfo");
+        element.innerHTML = this.frame;
     }
 
     /*
