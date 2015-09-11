@@ -252,6 +252,11 @@ code
     float : left;
 }
 
+.keyboardshortcuts li
+{
+    display : inline-block;
+}
+
 .trackobject
 {
     border : 2px solid black;

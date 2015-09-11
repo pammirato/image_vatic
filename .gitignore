@@ -2,6 +2,7 @@
 config.py
 tmp
 backups
+scripts
 vatic.tar.gz
 .DS_Store
 *.swp
