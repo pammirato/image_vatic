@@ -1,5 +1,19 @@
 var ui_disabled = 0;
 
+function encode_utf8(s) {
+  return unescape(encodeURIComponent(s));
+}
+
+String.prototype.getquote = function() {
+    return this.replace(/&quot;/gi,"\"");
+}
+
+function decode_utf8(s) {
+  if (s == null)
+    return s;
+  return decodeURIComponent(escape(s.getquote()));
+}
+
 function ui_build(job)
 {
     var screen = ui_setup(job);
@@ -103,7 +117,7 @@ function ui_setup(job)
 
     $("<div id='objectcontainer'></div>").appendTo("#sidebar");
 
-    $("#commentarea").val(job.comment);
+    $("#commentarea").val(decode_utf8(job.comment));
 
     $("<div class='button' id='openadvancedoptions'>Options</div>")
         .button({
@@ -268,12 +282,12 @@ function ui_setupbuttons(job, player, tracks)
     }
 
     String.prototype.delquote = function() {
-        return this.replace(/["']{1}/gi,"&quot;");
+        return this.replace(/["]{1}/gi,"&quot;");
     }
 
     $("#commentarea").focusout(function() {
         console.log("ui enabled");
-        job.comment = $(this).val();
+        job.comment = encode_utf8($(this).val().removelinebreak().delquote());
         console.log("comment added:" + job.comment);
         ui_enable();
     });

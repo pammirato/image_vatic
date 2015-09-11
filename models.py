@@ -128,7 +128,7 @@ class Job(turkic.models.HIT):
                                   backref = backref("jobs",
                                                     cascade = "all,delete"))
     istraining     = Column(Boolean, default = False)
-    comment        = Column(Text)
+    comment        = Column(Text(collation="utf8_general_ci"))
 
     def getpage(self):
         return "?id={0}".format(self.id)
