@@ -65,8 +65,8 @@ function ui_setup(job)
                   "<li><code>t/y</code>  toggles play/pause on the video</li>" +
                   "<li><code>r/u</code>  rewinds the video to the start</li>" +
                   "<li><code>e/i</code>  creates a new object</li>" +
-                  "<li><code>f/j</code>  jump forward 5 frames</li>" +
-                  "<li><code>d/k</code>  jump backward 5 frames</li>" +
+                  "<li><code>f/j</code>  jump forward 10 frames</li>" +
+                  "<li><code>d/k</code>  jump backward 10 frames</li>" +
                   "<li><code>v/n</code>  step forward 1 frame</li>" +
                   "<li><code>c/m</code>  step backward 1 frame</li>" +
                   "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
@@ -390,12 +390,12 @@ function ui_setupkeyboardshortcuts(job, player)
             if (keycode == 107 || keycode == 100)
             {
                 // 107 ==> k, 100 ==>d
-                skip = job.skip > 0 ? -job.skip : -5;
+                skip = job.skip > 0 ? -job.skip : -10;
             }
             else if (keycode == 106 || keycode == 102)
             {
                 // 106 ==> j, 102 ==>f
-                skip = job.skip > 0 ? job.skip : 5;
+                skip = job.skip > 0 ? job.skip : 10;
             }
             else if (keycode == 110 || keycode == 118)
             {
