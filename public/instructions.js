@@ -64,7 +64,7 @@ function instructions(job, h)
     h.append("<p>We will hand review your work and we will only accept high quality work. Your annotations are not compared against other workers. Follow these guidelines to ensure your work is accepted:</p>");
 
     h.append("<h3>Label Every Object</h3>")
-    h.append('<iframe title="YouTube video player" width="560" height="349" src="http://www.youtube.com/embed/H8cMZkz8Kbw?rel=0" frameborder="0" allowfullscreen></iframe>');
+    h.append('<iframe title="YouTube video player" width="560" height="349" src="https://www.youtube.com/embed/H8cMZkz8Kbw?rel=0" frameborder="0" allowfullscreen></iframe>');
     //h.append("<img src='secret.png'>");
     //h.append("<img src='everyobject.jpg'>");
 
@@ -108,16 +108,16 @@ function instructions(job, h)
 
     h.append("<h3>Keyboard Shortcuts</h3>");
     h.append("<p>These keyboard shortcuts are available for your convenience:</p>");
-    h.append("<ul class='keyboardshortcuts' display='inline' >" +
-        "<li><code>t/y</code>  toggles play/pause on the video</li>" +
-        "<li><code>r/u</code>  rewinds the video to the start</li>" +
-        "<li><code>e/i</code>  creates a new object</li>" +
-        "<li><code>f/j</code>  jump forward 10 frames</li>" +
-        "<li><code>d/k</code>  jump backward 10 frames</li>" +
-        "<li><code>v/n</code>  step forward 1 frame</li>" +
-        "<li><code>c/m</code>  step backward 1 frame</li>" +
-        "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
-        "<li><code>w/o</code>  toggles hide labels</li>" +
-        "<li><code>q/p</code>  toggles disable resize</li>" +
-        '</ul>');
+    h.append("<div><ul class='keyboardshortcuts'>" +
+        "<li><code>t/y</code>  toggles play/pause on the video</li><br>" +
+        "<li><code>r/u</code>  rewinds the video to the start</li><br>" +
+        "<li><code>e/i</code>  creates a new object</li><br>" +
+        "<li><code>f/j</code>  jump forward 10 frames</li><br>" +
+        "<li><code>d/k</code>  jump backward 10 frames</li><br>" +
+        "<li><code>v/n</code>  step forward 1 frame</li><br>" +
+        "<li><code>c/m</code>  step backward 1 frame</li><br>" +
+        "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li><br>" +
+        "<li><code>w/o</code>  toggles hide labels</li><br>" +
+        "<li><code>q/p</code>  toggles disable resize</li><br>" +
+        '</ul></div>');
 }

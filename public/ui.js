@@ -59,9 +59,9 @@ function ui_setup(job)
           "</tr>" +
           "<tr>" +
               "<td>" +
-              "<div id='keyboardshortcuts'>" +
+              "<div id='keyshortcuts''>" +
                   "Keyboard Shortcuts:" +
-                  "<ul class='keyboardshortcuts' display='inline' >" +
+                  "<ul class='keyboardshortcuts' >" +
                   "<li><code>t/y</code>  toggles play/pause on the video</li>" +
                   "<li><code>r/u</code>  rewinds the video to the start</li>" +
                   "<li><code>e/i</code>  creates a new object</li>" +
@@ -88,21 +88,6 @@ function ui_setup(job)
                           "margin": "0 auto"})
                     .parent().css("width", playerwidth + "px");
 
-    $("#keyboardshortcuts").css({"width": 400 + "px",
-                                 "margin": "0 auto",
-                                 "float": "left"});
-
-    $("#comments").css({"width": 300 + "px",
-                        "margin": "0 auto",
-                        "float": "right"});
-
-    $("#commentarea").css({"width": 300 + "px",
-                           "height": 150 + "px",
-                           "margin": "15 auto",
-                           "padding-left": "15 px",
-                           "vertical-align": "middle",
-                           "resize": "none"});
-
     $("#sidebar").css({"height": job.height + "px",
                        "width": "205px"});
 
@@ -116,6 +101,21 @@ function ui_setup(job)
         "<div class='button' id='newobjectbutton'>New Object</div></div>");
 
     $("<div id='objectcontainer'></div>").appendTo("#sidebar");
+
+    $("#keyshortcuts").css({"width": 400 + "px",
+                            "margin": "0 auto",
+                            "float": "left"});
+
+    $("#comments").css({"width": 300 + "px",
+                        "margin": "0 auto",
+                        "float": "right"});
+
+    $("#commentarea").css({"width": 300 + "px",
+                           "height": 150 + "px",
+                           "margin": "15 auto",
+                           "padding-left": "15 px",
+                           "vertical-align": "middle",
+                           "resize": "none"});
 
     $("#commentarea").val(decode_utf8(job.comment));
 
