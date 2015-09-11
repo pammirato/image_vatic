@@ -19,7 +19,7 @@ function preload(queue, onprogress)
         {
             var image = new Image();
             image.onload = function() {
-                
+
                 // force the browser to cache it
                 $("<img src='" + remaining[0] + "'>").appendTo("#preloadpit");
 

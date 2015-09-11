@@ -98,7 +98,13 @@ function loadingscreen(job)
 
     eventlog("preload", "Start preloading");
 
-    preloadvideo(job.start, job.stop, job.frameurl,
+    var preload = getUrlVars()["preload"];
+    var stop = job.stop;
+    if (preload == 0) {
+        stop = job.start;
+    }
+
+    preloadvideo(job.start, stop, job.frameurl,
         preloadslider($("#loadingscreenslider"), function(progress) {
             if (progress == 1)
             {
