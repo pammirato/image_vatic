@@ -839,10 +839,11 @@ function Track(player, color, position)
         {
             position = this.estimate(frame);
         }
-	if (this.wasannot == false )
-	    this.handle.css("background-image", "");
-	else
-	    this.handle.css("background-image", 'url("diagonals.png")');
+
+        if (this.wasannot == false )
+          this.handle.css("background-image", "");
+        else
+          this.handle.css("background-image", 'url("diagonals.png")');
 
         if (position.outside)
         {
