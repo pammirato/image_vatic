@@ -1029,6 +1029,115 @@ class dump(DumpCommand):
 
         print "Done."
 
+@handler("Reload existing tracking data")
+class reload(Command):
+    def setup(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("slug")
+        parser.add_argument("--input", "-i")
+        parser.add_argument("--force", action="store_true", default=False)
+        parser.add_argument("--scale", "-s", default = 1.0, type = float)
+        parser.add_argument("--dimensions", "-d", default = None)
+        parser.add_argument("--original-video", "-v", default = None)
+        return parser
+
+    def __call__(self, args):
+        video = session.query(Video).filter(Video.slug == args.slug)
+        if not video.count():
+            print "Video {0} does not exist!".format(args.slug)
+            return
+        video = video.one()
+
+        if args.input:
+            if os.path.exists(args.input):
+                file = open(args.input, 'r')
+            else:
+                print "Input {0} does not exist".format(args.input)
+                return SystemExit()
+        else:
+            print "No input for video {0}".format(args.slug)
+            return SystemExit()
+
+        query = session.query(Path)
+        query = query.join(Job)
+        query = query.join(Segment)
+        query = query.filter(Segment.video == video)
+        numpaths = query.count()
+        if numpaths:
+            print ("Video has {0} paths.".format(numpaths))
+            force = args.force
+            if not force:
+                resp = raw_input("Delete video's existing tracks (y/N)? ").lower()
+                if resp in ["yes", "y"]:
+                    force = True
+            if force:
+                # delete existing path
+                for segment in video.segments:
+                    for job in segment.jobs:
+                        if job.published and not job.completed:
+                            hitid = job.disable()
+                            print "Disabled {0}".format(hitid)
+                        for path in job.paths:
+                            session.delete(path)
+                session.commit()
+                print "Deleted video's existing tracks!"
+
+        scale = args.scale
+        if args.dimensions or args.original_video:
+            if args.original_video:
+                w, h = ffmpeg.extract(args.original_video).next().size
+            else:
+                w, h = args.dimensions.split("x")
+            w = float(w)
+            h = float(h)
+            s = w / video.width
+            if s * video.height > h:
+                s = h / video.height
+            scale = s
+
+        print "Reload video {0}".format(args.slug)
+        self.reloadtext(file, args.slug, scale)
+
+        if args.input:
+            file.close()
+
+    def reloadtext(self, file, slug, scale):
+        # find the jobs and labels related to the video
+        jobs = session.query(Job)
+        jobs = jobs.join(Segment).join(Video).join(Label).filter(Video.slug == slug)
+        labels = session.query(Label).join(Video).filter(Video.slug == slug)
+
+        ids = []
+        exist = False
+        for line in file.readlines():
+            items = line.strip("\n").split(" ");
+            generated = int(items[8])
+            if generated == 1:
+                continue
+            id = int(items[0])
+            frame = int(items[5])
+            label = items[9][1:-1]
+            # TODO(Wei Liu): Add support for attributes
+            attributes = items[10:]
+            if id not in ids:
+                if ids:
+                    session.add(job)
+                    session.commit()
+                ids.append(id)
+                job = jobs.filter(Segment.start <= frame)
+                job = job.filter(Segment.stop >= frame)
+                job = job.filter(Video.totalframes >= frame).one()
+                label = labels.filter(Label.text == label).one()
+                path = Path(job = job, label = label)
+                exist = True
+            box = Box(path = path)
+            box.xtl, box.ytl, box.xbr, box.ybr = [x * scale for x in map(int, items[1:5])]
+            box.frame = frame
+            box.outside, box.occluded = map(int, items[6:8])
+        if exist:
+            session.add(job)
+            session.commit()
+
 @handler("Samples the performance by worker")
 class sample(Command):
     def setup(self):
