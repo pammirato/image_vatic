@@ -124,7 +124,7 @@ class load(LoadCommand):
         parser.add_argument("--per-object-bonus", type=float)
         parser.add_argument("--completion-bonus", type=float)
         parser.add_argument("--use-frames", default = None)
-        parser.add_argument("--use-all", default = None)
+        parser.add_argument("--use-all", action="store_true", default = False)
         parser.add_argument("--start-frame", type = int, default = 0)
         parser.add_argument("--stop-frame", type = int, default = None)
         parser.add_argument("--train-with")
@@ -595,7 +595,11 @@ class dump(DumpCommand):
         scale = args.scale
         if args.dimensions or args.original_video:
             if args.original_video:
-                w, h = ffmpeg.extract(args.original_video).next().size
+                # w, h = ffmpeg.extract(args.original_video).next().size
+                w, h = ffmpeg.info().get_size(args.original_video)
+                if w == 0 or h == 0:
+                    print "Cannot get size for %s" % args.original_video
+                    return SystemExit()
             else:
                 w, h = args.dimensions.split("x")
             w = float(w)
