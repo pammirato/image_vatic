@@ -434,6 +434,7 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
                         var seek_frame = player.job.start;
                         for (var frame in track.journal.annotations)
                         {
+                            frame = parseInt(frame);
                             if (frame >= cur_frame)
                             {
                                 break;
@@ -462,6 +463,7 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
                         var seek_frame = player.job.stop;
                         for (var frame in track.journal.annotations)
                         {
+                            frame = parseInt(frame);
                             seek_frame = frame;
                             if (frame > cur_frame)
                             {
