@@ -24,6 +24,22 @@ import vision.pascal
 import itertools
 from xml.etree import ElementTree
 
+def get_guiscale(guiscale, minplayerwidth, videowidth):
+    " Reason about the guiscale given all parameters. "
+    if not minplayerwidth:
+        minplayerwidth = 720.0
+    else:
+        minplayerwidth = float(minplayerwidth)
+
+    if not guiscale:
+        guiscale = 1.0
+    elif guiscale == 'auto':
+        guiscale = minplayerwidth / videowidth
+    else:
+        guiscale = float(guiscale)
+
+    return guiscale
+
 @handler("Decompresses an entire video into frames")
 class extract(Command):
     def setup(self):
@@ -479,13 +495,20 @@ class visualize(DumpCommand):
         parser.add_argument("--no-augment", action="store_true", default = False)
         parser.add_argument("--labels", action="store_true", default = False)
         parser.add_argument("--renumber", action="store_true", default = False)
+        parser.add_argument("--guiscale", default = None)
+        parser.add_argument("--minplayerwidth", default = None)
         return parser
 
     def __call__(self, args):
         video, data = self.getdata(args)
 
+        # get guiscale
+        guiscale = get_guiscale(args.guiscale, args.minplayerwidth, video.width)
+        scale = 1.0 / guiscale
+
         # prepend class label
         for track in data:
+            track.boxes = [x.transform(scale) for x in track.boxes]
             for box in track.boxes:
                 box.attributes.insert(0, track.label)
 
@@ -574,6 +597,8 @@ class dump(DumpCommand):
         parser.add_argument("--scale", "-s", default = 1.0, type = float)
         parser.add_argument("--dimensions", "-d", default = None)
         parser.add_argument("--original-video", "-v", default = None)
+        parser.add_argument("--guiscale", default = None)
+        parser.add_argument("--minplayerwidth", default = None)
         parser.add_argument("--lowercase", action="store_true", default=False)
         return parser
 
@@ -608,6 +633,10 @@ class dump(DumpCommand):
             if s * video.height > h:
                 s = h / video.height
             scale = s
+
+        # get guiscale
+        guiscale = get_guiscale(args.guiscale, args.minplayerwidth, video.width)
+        scale /= guiscale
 
         for track in data:
             track.boxes = [x.transform(scale) for x in track.boxes]
@@ -1043,6 +1072,8 @@ class reload(Command):
         parser.add_argument("--scale", "-s", default = 1.0, type = float)
         parser.add_argument("--dimensions", "-d", default = None)
         parser.add_argument("--original-video", "-v", default = None)
+        parser.add_argument("--guiscale", default = None)
+        parser.add_argument("--minplayerwidth", default = None)
         return parser
 
     def __call__(self, args):
@@ -1089,7 +1120,8 @@ class reload(Command):
         scale = args.scale
         if args.dimensions or args.original_video:
             if args.original_video:
-                w, h = ffmpeg.extract(args.original_video).next().size
+                # w, h = ffmpeg.extract(args.original_video).next().size
+                w, h = ffmpeg.info().get_size(args.original_video)
             else:
                 w, h = args.dimensions.split("x")
             w = float(w)
@@ -1098,6 +1130,13 @@ class reload(Command):
             if s * video.height > h:
                 s = h / video.height
             scale = s
+
+        # get guiscale
+        guiscale = get_guiscale(args.guiscale, args.minplayerwidth, video.width)
+
+        # input annotation should have consistent dimension with the original-video
+        # scale it down to same dimension as of loaded video, and scale it up for display
+        scale = guiscale / scale
 
         print "Reload video {0}".format(args.slug)
         self.reloadtext(file, args.slug, scale)
@@ -1151,6 +1190,8 @@ class sample(Command):
         parser.add_argument("--frames", "-f", type=int, default=4)
         parser.add_argument("--since", "-s")
         parser.add_argument("--labels", action="store_true", default = False)
+        parser.add_argument("--guiscale", default = None)
+        parser.add_argument("--minplayerwidth", default = None)
         return parser
 
     def __call__(self, args):
@@ -1188,9 +1229,20 @@ class sample(Command):
 
             for job in jobs:
                 print "Visualizing HIT {0}".format(job.hitid)
+                video = job.segment.video
                 paths = [x.getboxes(interpolate = True,
                                     bind = True,
                                     label = True) for x in job.paths]
+
+                # TODO (Wei Liu): scale paths
+                """
+                # get guiscale
+                guiscale = get_guiscale(args.guiscale, args.minplayerwidth, video.width)
+                scale = 1.0 / guiscale
+
+                for i, boxes in enumerate(paths):
+                    paths[i] = [x.transform(scale) for x in boxes]
+                """
 
                 if args.frames > job.segment.stop - job.segment.start:
                     frames = range(job.segment.start, job.segment.stop + 1)
@@ -1200,7 +1252,6 @@ class sample(Command):
                                            args.frames)
 
                 size = math.sqrt(len(frames))
-                video = job.segment.video
                 bannersize = (video.width * int(math.floor(size)),
                               video.height * int(math.ceil(size)))
                 image = Image.new(video[0].mode, bannersize)
