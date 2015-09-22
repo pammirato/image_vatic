@@ -26,7 +26,7 @@ function ui_build(job)
     ui_setupslider(player);
     ui_setupsubmit(job, tracks);
     ui_setupclickskip(job, player, tracks, objectui);
-    ui_setupkeyboardshortcuts(job, player);
+    ui_setupkeyboardshortcuts(job, player, tracks);
     ui_loadprevious(job, objectui);
 
     $("#newobjectbutton").click(function() {
@@ -72,6 +72,9 @@ function ui_setup(job)
                   "<li><code>d/k</code>  jump backward 10 frames</li>" +
                   "<li><code>v/n</code>  step forward 1 frame</li>" +
                   "<li><code>c/m</code>  step backward 1 frame</li>" +
+                  "<li><code>g/h</code>  jump to next labeled frames</li>" +
+                  "<li><code>s/l</code>  jump to previous labeled frames</li>" +
+                  "<li><code>d/k</code>  jump backward 10 frames</li>" +
                   "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
                   "<li><code>w/o</code>  toggles hide labels</li>" +
                   "<li><code>q/p</code>  toggles disable resize</li>" +
@@ -344,7 +347,7 @@ function ui_setupbuttons(job, player, tracks)
     });
 }
 
-function ui_setupkeyboardshortcuts(job, player)
+function ui_setupkeyboardshortcuts(job, player, tracks)
 {
     $(window).keypress(function(e) {
         var target = e.target || e.srcElement;
@@ -397,25 +400,81 @@ function ui_setupkeyboardshortcuts(job, player)
         else
         {
             var skip = 0;
-            if (keycode == 107 || keycode == 100)
+            if (keycode == 100 || keycode == 107)
             {
-                // 107 ==> k, 100 ==>d
+                // 100 ==> d, 107 ==> k
                 skip = job.skip > 0 ? -job.skip : -10;
             }
-            else if (keycode == 106 || keycode == 102)
+            else if (keycode == 102 || keycode == 106)
             {
-                // 106 ==> j, 102 ==>f
+                // 102 ==> f, 106 ==> j
                 skip = job.skip > 0 ? job.skip : 10;
             }
-            else if (keycode == 110 || keycode == 118)
+            else if (keycode == 118 || keycode == 110)
             {
-                // 106 ==> n, 118 ==>v
+                // 118 ==> v, 110 ==> n
                 skip = job.skip > 0 ? job.skip : 1;
             }
-            else if (keycode == 109 || keycode == 99)
+            else if (keycode == 99 || keycode == 109)
             {
-                // 109 ==> m, 99 ==>c
+                // 99 ==> c, 109 ==> m
                 skip = job.skip > 0 ? -job.skip : -1;
+            }
+            else if (keycode == 115 || keycode == 108)
+            {
+                // 115 ==> s, 108 ==> l
+                var cur_frame = player.frame;
+                var final_frame = player.job.start;
+                // find the closest manually annotated frame from the left
+                for (var i in tracks.tracks)
+                {
+                    var track = tracks.tracks[i];
+                    if (!track.deleted)
+                    {
+                        var seek_frame = player.job.start;
+                        for (var frame in track.journal.annotations)
+                        {
+                            if (frame >= cur_frame)
+                            {
+                                break;
+                            }
+                            seek_frame = frame;
+                        }
+                        if (seek_frame > final_frame)
+                        {
+                            final_frame = seek_frame;
+                        }
+                    }
+                }
+                skip = final_frame - cur_frame;
+            }
+            else if (keycode == 103 || keycode == 104)
+            {
+                // 103 ==> g, 104 ==> h
+                var cur_frame = player.frame;
+                var final_frame = player.job.stop;
+                // find the closest manually annotated frame from the right
+                for (var i in tracks.tracks)
+                {
+                    var track = tracks.tracks[i];
+                    if (!track.deleted)
+                    {
+                        var seek_frame = player.job.stop;
+                        for (var frame in track.journal.annotations)
+                        {
+                            seek_frame = frame;
+                            if (frame > cur_frame)
+                            {
+                                break;
+                            }
+                        }
+                        if (seek_frame < final_frame)
+                        {
+                            final_frame = seek_frame;
+                        }
+                    }
+                }
+                skip = final_frame - cur_frame;
             }
 
             if (skip != 0)
