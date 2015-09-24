@@ -464,9 +464,9 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
                         for (var frame in track.journal.annotations)
                         {
                             frame = parseInt(frame);
-                            seek_frame = frame;
                             if (frame > cur_frame)
                             {
+                                seek_frame = frame;
                                 break;
                             }
                         }
