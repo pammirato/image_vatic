@@ -1434,3 +1434,37 @@ class listvideos(Command):
                     print "{0:>3}/{1:<8}".format(video.numcompleted, video.numjobs),
                     print "${0:<15.2f}".format(video.cost),
                 print ""
+
+@handler("Map a list of job ids to video slugs")
+class map(Command):
+    def setup(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument("--jobid-file", "-i")
+        parser.add_argument("--slug-file", "-s")
+        return parser
+
+    def __call__(self, args):
+        if not os.path.exists(args.jobid_file):
+            print "{0} does not exist!".format(args.jobid_file)
+            return SystemExit()
+
+        out_dir = os.path.dirname(args.slug_file)
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+        sid = open(args.slug_file, "w")
+
+        videos = session.query(Video)
+        videos = videos.join(Segment).join(Job)
+
+        with open(args.jobid_file, "r") as j:
+            for line in j.readlines():
+                jobid = int(line.strip("\r\n"))
+                if jobid:
+                    video = videos.filter(Job.id == jobid)
+                    if video.count() == 1:
+                        sid.write("{0}\n".format(video.one().slug))
+                    elif video.count() == 0:
+                        print "Cannot find video for job {0}".format(jobid)
+                    elif video.count() > 1:
+                        print "FATAL: Find more than one video for job {0}".format(jobid)
+        sid.close()
