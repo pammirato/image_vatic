@@ -1276,6 +1276,80 @@ class sample(Command):
                                                     worker.id,
                                                     job.hitid))
 
+@handler("Select sample frames from video")
+class select(DumpCommand):
+    def setup(self):
+        parser = argparse.ArgumentParser(parents = [self.parent])
+        parser.add_argument("--directory", "-d")
+        parser.add_argument("--percent", "-p", type=float, default=0.1)
+        parser.add_argument("--store-single", action="store_true", default = False)
+        parser.add_argument("--labels", action="store_true", default = False)
+        parser.add_argument("--guiscale", default = None)
+        parser.add_argument("--minplayerwidth", default = None)
+        return parser
+
+    def __call__(self, args):
+        try:
+            os.makedirs(args.directory)
+        except:
+            pass
+
+        # get all data
+        video, data = self.getdata(args)
+        segments = session.query(Segment)
+        segments = segments.join(Video)
+        segments = segments.filter(Video.slug == args.slug)
+
+        # get guiscale
+        guiscale = get_guiscale(args.guiscale, args.minplayerwidth, video.width)
+        scale = 1.0 / guiscale
+
+        # prepend class label
+        for track in data:
+            track.boxes = [x.transform(scale) for x in track.boxes]
+            for box in track.boxes:
+                box.attributes.insert(0, track.label)
+
+        paths = [x.boxes for x in data]
+        if args.labels:
+            font = ImageFont.truetype("arial.ttf", 14)
+        else:
+            font = None
+
+        for segment in segments:
+            framenums = int(math.ceil((segment.stop - segment.start + 1) * args.percent))
+            frames = random.sample(xrange(segment.start, segment.stop + 1), framenums)
+            frames.append(int(segment.start))
+            frames.append(int(segment.stop))
+
+            if args.store_single:
+                size = math.sqrt(len(frames))
+                offset = (0, 0)
+                horcount = 0
+            else:
+                size = 1
+            bannersize = (video.width * int(math.floor(size)),
+                video.height * int(math.ceil(size)))
+            image = Image.new(video[0].mode, bannersize)
+            size = int(math.floor(size))
+
+            it = vision.visualize.highlight_paths(video, paths, font = font)
+            for frame, framenum in it:
+                if framenum in frames:
+                    if not args.store_single:
+                        frame.save("%s/%s_%04d.jpg" % (args.directory, args.slug,
+                            framenum))
+                    else:
+                        image.paste(frame, offset)
+                        horcount += 1
+                        if horcount >= size:
+                            offset = (0, offset[1] + video.height)
+                            horcount = 0
+                        else:
+                            offset = (offset[0] + video.width, offset[1])
+            if args.store_single:
+                image.save("{0}/{1}.jpg".format(args.directory, args.slug))
+
 @handler("Provides a URL to fix annotations during vetting")
 class find(Command):
     def setup(self):
