@@ -1435,8 +1435,8 @@ class listvideos(Command):
                     print "${0:<15.2f}".format(video.cost),
                 print ""
 
-@handler("Map a list of job ids to video slugs")
-class map(Command):
+@handler("Convert a list of job ids to video slugs")
+class convert(Command):
     def setup(self):
         parser = argparse.ArgumentParser()
         parser.add_argument("--jobid-file", "-i")
