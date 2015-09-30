@@ -80,6 +80,13 @@ class Label(turkic.database.Base):
     video = relationship(Video, backref = backref("labels",
                                                   cascade = "all,delete"))
 
+class Synset(turkic.database.Base):
+    __tablename__ = "synsets"
+
+    id = Column(Integer, primary_key = True)
+    name = Column(String(250), ForeignKey(Label.text))
+    wnid = Column(String(250))
+
 class Attribute(turkic.database.Base):
     __tablename__ = "attributes"
 
