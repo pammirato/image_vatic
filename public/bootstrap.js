@@ -134,7 +134,6 @@ function brandingscreen()
     console.log("Loading screen");
     var d = $("<div style='margin:0 auto;width:400px;background-color:#fff;padding:20px;'></div>");
     d.append("<h1>Welcome to vatic</h1>");
-    d.append("<a href=login>Login</a> | <a href=signup>Signup</a>");
     d.append("<p><strong>vatic</strong> is an online, interactive video annotation tool for computer vision research that crowdsources work to Amazon's Mechanical Turk. Our tool makes it easy to build massive, affordable video data sets and can be deployed on a cloud. Written in Python + C + Javascript, vatic is free and open-source software.</p>");
     d.append("<p><a href='http://mit.edu/vondrick/vatic' target='_blank'>More information &raquo;</a></p>");
     d.hide();
