@@ -84,7 +84,7 @@ class Synset(turkic.database.Base):
     __tablename__ = "synsets"
 
     id = Column(Integer, primary_key = True)
-    name = Column(String(250), ForeignKey(Label.text))
+    name = Column(String(250))
     wnid = Column(String(250))
 
 class Attribute(turkic.database.Base):
