@@ -591,6 +591,7 @@ class dump(DumpCommand):
         parser.add_argument("--labelme", "-vlm",
             action="store", default=False)
         parser.add_argument("--pascal", action="store_true", default=False)
+        parser.add_argument("--ilsvrc", action="store_true", default=False)
         parser.add_argument("--pascal-difficult", type = int, default = 100)
         parser.add_argument("--pascal-skip", type = int, default = 15)
         parser.add_argument("--pascal-negatives")
@@ -605,7 +606,7 @@ class dump(DumpCommand):
     def __call__(self, args):
         video, data = self.getdata(args)
 
-        if args.pascal:
+        if args.pascal or args.ilsvrc:
             if not args.output:
                 print "error: PASCAL output needs an output"
                 return
@@ -659,10 +660,12 @@ class dump(DumpCommand):
                 print "Warning: you should manually update the JPEGImages"
             self.dumppascal(file, video, data, args.pascal_difficult,
                             args.pascal_skip, args.pascal_negatives)
+        elif args.ilsvrc:
+            self.dumpilsvrc(file, video, data)
         else:
             self.dumptext(file, data)
 
-        if args.pascal:
+        if args.pascal or args.ilsvrc:
             return
         elif args.output:
             file.close()
@@ -982,8 +985,8 @@ class dump(DumpCommand):
             file.write("<segmented>0</segmented>")
             file.write("<size>")
             file.write("<depth>3</depth>")
-            file.write("<height>{0}</height>".format(video.width))
-            file.write("<width>{0}</width>".format(video.height))
+            file.write("<height>{0}</height>".format(video.height))
+            file.write("<width>{0}</width>".format(video.width))
             file.write("</size>")
             file.write("<source>")
             file.write("<annotation>{0}</annotation>".format(video.slug))
@@ -1058,9 +1061,105 @@ class dump(DumpCommand):
                 os.unlink(dest)
             except OSError:
                 pass
-            os.link(path, dest)
+            os.symlink(path, dest)
 
         print "Done."
+
+    def dumpilsvrc(self, folder, video, data):
+        byframe = {}
+        for track in data:
+            for box in track.boxes:
+                if box.frame not in byframe:
+                    byframe[box.frame] = []
+                byframe[box.frame].append((box, track))
+
+        hasit = {}
+        allframes = range(0, video.totalframes)
+
+        anno_folder = "{0}/Annotations/VID/{1}".format(folder, video.slug)
+        try:
+            os.makedirs(anno_folder)
+        except:
+            pass
+        imgset_folder = "{0}/ImageSets/VID/".format(folder)
+        try:
+            os.makedirs(imgset_folder)
+        except:
+            pass
+        img_folder = "{0}/Data/VID/{1}".format(folder, video.slug)
+        try:
+            os.makedirs(img_folder)
+        except:
+            pass
+
+        numtotal = 0
+
+        # print "Writing annotations..."
+        for frame in allframes:
+            if frame in byframe:
+                boxes = byframe[frame]
+            else:
+                boxes = []
+
+            strframe = str(frame+1).zfill(6)
+            filename = "{0}/{1}.xml".format(anno_folder, strframe)
+            file = open(filename, "w")
+            file.write("<annotation>\n")
+            file.write("\t<folder>{0}</folder>\n".format(video.slug))
+            file.write("\t<filename>{0}</filename>\n".format(strframe))
+            file.write("\t<source>\n")
+            file.write("\t\t<database>ILSVRC</database>\n")
+            file.write("\t</source>\n")
+            file.write("\t<size>\n")
+            file.write("\t\t<width>{0}</width>\n".format(video.width))
+            file.write("\t\t<height>{0}</height>\n".format(video.height))
+            file.write("\t</size>\n")
+
+            isempty = True
+            for box, track in boxes:
+                if box.lost:
+                    continue
+
+                isempty = False
+
+                if track.label not in hasit:
+                    hasit[track.label] = set()
+                hasit[track.label].add(frame)
+
+                numtotal += 1
+
+                file.write("\t<object>\n")
+                wnid = session.query(Synset).filter(Synset.name == track.label).one().wnid
+                file.write("\t\t<name>{0}</name>\n".format(wnid))
+                file.write("\t\t<bndbox>\n")
+                file.write("\t\t\t<xmax>{0}</xmax>\n".format(box.xbr))
+                file.write("\t\t\t<xmin>{0}</xmin>\n".format(box.xtl))
+                file.write("\t\t\t<ymax>{0}</ymax>\n".format(box.ybr))
+                file.write("\t\t\t<ymin>{0}</ymin>\n".format(box.ytl))
+                file.write("\t\t</bndbox>\n")
+                file.write("\t\t<occluded>{0}</occluded>\n".format(box.occluded))
+                file.write("\t\t<generated>{0}</generated>\n".format(box.generated))
+                file.write("\t</object>\n")
+
+            file.write("</annotation>\n")
+            file.close()
+
+        # print "Total frames: {0}".format(numtotal)
+
+        # print "Writing image sets..."
+        for label, frames in hasit.items():
+            filename = "{0}/{1}_trainval.txt".format(imgset_folder, label)
+            file = open(filename, "w")
+            for frame in allframes:
+                file.write(str(frame+1).zfill(6))
+                file.write(" ")
+                if frame in frames:
+                    file.write("1")
+                else:
+                    file.write("-1")
+                file.write("\n")
+
+        # print "Done."
 
 @handler("Reload existing tracking data")
 class reload(Command):
