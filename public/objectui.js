@@ -87,7 +87,7 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
         this.tracks.dim(false);
         this.currentobject.track.highlight(false);
 
-        this.button.button("option", "disabled", false);
+        //this.button.button("option", "disabled", false);
 
         this.counter++;
     }
@@ -147,13 +147,19 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
             me.stopdrawing(position);
         });
 
-        var html = "<p>In this video, please track all of these objects:</p>";
+        var html = "<p>please track this object:</p>";
         html += "<ul>";
         for (var i in this.job.labels)
         {
             html += "<li>" + this.job.labels[i] + "</li>";
         }
         html += "</ul>";
+
+        html += "<p><br/><br/><br/><br/> </p>";
+        html += "<p><br/><br/><br/><br/> <strong> KEEP ALL BOXES TIGHT!<strong/></p>";
+        html += "<p><br/><br/> <strong> MAKE SURE THE WHOLE OBJECT IS IN THE BOX!<strong/></p>";
+        html += "<p><br/><br/> ZOOM in/out  = CTRL +/-</p>";
+        html += "<p id='not_done_text'><br/><br/> </p>";
 
         this.instructions = $(html).appendTo(this.container);
     }
@@ -285,7 +291,7 @@ function TrackObject(job, player, container, color)
 
     this.statedraw = function()
     {
-        var html = "<p>Draw a box around one of these objects:</p>"; 
+        var html = "<p>Draw a box around the object:</p>"; 
 
         html += "<ul>";
         for (var i in this.job.labels)
@@ -293,7 +299,7 @@ function TrackObject(job, player, container, color)
             html += "<li>" + this.job.labels[i] + "</li>";
         }
         html += "</ul>";
-        html += "<p>Do not annotate the same object twice.</p>";
+        html += "<p></p>";
 
         this.drawinst = $("<div>" + html + "</div>").appendTo(this.handle);
         this.drawinst.hide().slideDown();
@@ -417,7 +423,7 @@ function TrackObject(job, player, container, color)
             (function(attributeid) {
 
                 $("#trackobject" + me.id + "attribute" + i).click(function() {
-                    me.player.pause();
+                    //me.player.pause();
 
                     var checked = $(this).attr("checked");
                     me.track.setattribute(attributeid, checked ? true : false);
@@ -440,7 +446,7 @@ function TrackObject(job, player, container, color)
 
 
         $("#trackobject" + this.id + "lost").click(function() {
-            me.player.pause();
+            //me.player.pause();
 
             var outside = $(this).is(":checked");
             me.track.setoutside(outside);
@@ -456,7 +462,7 @@ function TrackObject(job, player, container, color)
             }
         });
         $("#trackobject" + this.id + "occluded").click(function() {
-            me.player.pause();
+            //me.player.pause();
 
             var occlusion = $(this).is(":checked");
             me.track.setocclusion(occlusion);

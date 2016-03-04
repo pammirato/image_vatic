@@ -712,8 +712,8 @@ function Track(player, color, position)
     {
         if (this.handle != null)
         {
-            var t = this.handle.children(".boundingboxtext");
-            t.html(value).show();
+            //var t = this.handle.children(".boundingboxtext");
+           // t.html(value).show();
         }
 
     }
@@ -775,7 +775,7 @@ function Track(player, color, position)
                 autoHide: true,
                 ghost: true, /* need to fix this bug soon */
                 start: function() {
-                    player.pause();
+                    //player.pause();
                     me.notifystartupdate();
                     //me.triggerinteract();
                     for (var i in me.onmouseover)
@@ -797,7 +797,7 @@ function Track(player, color, position)
 
             this.handle.draggable({
                 start: function() {
-                    player.pause();
+                    //player.pause();
                     me.notifystartupdate();
                     //me.triggerinteract();
                 },
@@ -870,7 +870,7 @@ function Track(player, color, position)
             width: (position.width - this.htmloffset) + "px",
             height: (position.height - this.htmloffset) + "px"
         });
-    }
+    }//end draw funtcion
 
     this.triggerinteract = function()
     {
@@ -1073,6 +1073,8 @@ function Journal(start, blowradius)
     {
         console.log("Marking " + frame);
 
+
+        /*    //interpolation stuff -phil
         var newannotations = {};
 
         for (var i in this.annotations)
@@ -1092,7 +1094,7 @@ function Journal(start, blowradius)
             }
         }
 
-        this.annotations = newannotations;
+        this.annotations = newannotations;*/
         this.annotations[frame] = position;
     }
 
@@ -1160,6 +1162,8 @@ function Journal(start, blowradius)
         return item;
     }
 
+
+
     /*
      * Serializes this journal based on position.
      */
@@ -1181,6 +1185,7 @@ function Journal(start, blowradius)
             str += "\"" + frame + "\":" + dat + ",";
         }
 
+        /*  //make sure the interpolation finishes?  -phil
         if (this.artificialrightframe != null && this.annotations[this.artificialrightframe] == null)
         {
             console.log("Using artificial in serialization");
@@ -1190,7 +1195,7 @@ function Journal(start, blowradius)
                 dat = dat.serialize();
             }
             str += "\"" + this.artificialrightframe + "\":" + dat + ",";
-        }
+        }*/
         return str.substr(0, str.length - 1) + "}";
     }
 }

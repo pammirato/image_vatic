@@ -127,6 +127,7 @@ function loadingscreen(job)
             }
         })
     );
+
 }
 
 function brandingscreen()

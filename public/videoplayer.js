@@ -36,7 +36,7 @@ function VideoPlayer(handle, job)
     /*
      * Starts playing the video if paused.
      */
-    this.play = function()
+/*    this.play = function()
     {
         if (this.paused)
         {
@@ -56,11 +56,11 @@ function VideoPlayer(handle, job)
             this._callback(this.onplay);
         }
     }
-
+*/
     /*
      * Pauses the video if playing.
      */
-    this.pause = function()
+/*    this.pause = function()
     {
         if (!this.paused)
         {
@@ -72,7 +72,7 @@ function VideoPlayer(handle, job)
             this._callback(this.onpause);
         }
     }
-
+*/
     /*
      * Seeks to a specific video frame.
      */
@@ -96,8 +96,19 @@ function VideoPlayer(handle, job)
      */
     this.updateframe = function()
     {
-        this.frame = Math.min(this.frame, this.job.stop);
-        this.frame = Math.max(this.frame, this.job.start);
+        //this.frame = Math.min(this.frame, this.job.stop);
+        //this.frame = Math.max(this.frame, this.job.start);
+
+        //wrap around
+        if(this.frame > this.job.stop)
+        {
+            this.frame = this.job.start;
+        }  
+        else if(this.frame < this.job.start)
+        {
+            this.frame = this.job.stop;
+        }
+
 
         var url = this.job.frameurl(this.frame);
         this.handle.css("background-image", "url('" + url + "')");

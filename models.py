@@ -49,7 +49,12 @@ class Video(turkic.database.Base):
 
     @property
     def cost(self):
+        print 'Video setting cost' 
         cost = 0
+        #if(self.isfortraining): #training videos get no cost
+        #    for segment in self.segments:
+        #        segment.cost = 0
+        #    return cost 
         for segment in self.segments:
             cost += segment.cost
         return cost
@@ -70,6 +75,15 @@ class Video(turkic.database.Base):
                 if job.completed:
                     count += 1
         return count
+
+#    def set_cost(self,newcost):
+#        self.cost = newcost
+
+    def set_completionbonus(self, newcomp):
+        self.completionbonus = newcomp
+
+    def set_perobjectbonus(self, newper):
+        self.perobjectbonus = newper
 
 class Label(turkic.database.Base):
     __tablename__ = "labels"
@@ -122,6 +136,8 @@ class Segment(turkic.database.Base):
         cost = 0
         for job in self.jobs:
             cost += job.cost
+
+        print "Segment cost set {0}".format(cost)
         return cost
 
 class Job(turkic.models.HIT):
@@ -184,6 +200,10 @@ class Job(turkic.models.HIT):
     def cost(self):
         if not self.completed:
             return 0
+        if self.istraining:
+            print 'Traing JOB' 
+            return .003
+        print 'JOB COST'
         return self.bonusamount + self.group.cost + self.donatedamount
 
     def __iter__(self):

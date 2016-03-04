@@ -155,10 +155,10 @@ class load(LoadCommand):
         return parser
 
     def title(self, args):
-        return "Video annotation"
+        return "Image Annotation"
 
     def description(self, args):
-        return "Draw boxes around objects moving around in a video."
+        return "Draw boxes around objects in images."
 
     def cost(self, args):
         return 0.05
@@ -167,10 +167,10 @@ class load(LoadCommand):
         return 7200 * 3
 
     def keywords(self, args):
-        return "video, annotation, computer, vision"
+        return "image, annotation, computer, vision"
 
     def __call__(self, args, group):
-        print "Checking integrity..."
+        print "Chiggity Checking integrity..."
 
         # read first frame to get sizes
         path = Video.getframepath(0, args.location)
@@ -223,6 +223,10 @@ class load(LoadCommand):
                     .format(args.train_with))
                 return
             trainer = trainer.one()
+            print trainer.cost
+            #trainer.set_cost(0) 
+            trainer.set_completionbonus(0) 
+            trainer.set_perobjectbonus(0)
         else:
             trainer = None
 
@@ -335,7 +339,7 @@ class load(LoadCommand):
                 job = Job(segment = segment, group = group)
                 session.add(segment)
                 session.add(job)
-
+                print 'New segment added'
         if args.per_object_bonus:
             group.schedules.append(
                 PerObjectBonus(amount = args.per_object_bonus))
@@ -386,6 +390,9 @@ class load(LoadCommand):
                 print "Visit this URL to provide training with ground truth."
         else:
             print "Video loaded and ready for publication."
+            
+            #print trainer.cost
+
 
 @handler("Deletes an already imported video")
 class delete(Command):

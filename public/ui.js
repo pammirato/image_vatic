@@ -35,6 +35,11 @@ function ui_build(job)
             $("#turkic_acceptfirst").effect("pulsate");
         }
     });
+
+  //  $("#newobjectbutton").click();
+
+        
+//    $("#newobjectbutton").button("option", "disabled", true);
 }
 
 function ui_setup(job)
@@ -43,7 +48,7 @@ function ui_setup(job)
 
     $("<table>" +
         "<tr>" +
-            "<td><div id='instructionsbutton' class='button'>Instructions</div><div id='instructions'>Annotate every object, even stationary and obstructed objects, for the entire video.</td>" +
+            "<td><div id='instructionsbutton' class='button'>Instructions</div><div id='instructions'>Annotate the object of interest in every image.</td>" +
             "<td><div id='topbar'></div></td>" +
         "</tr>" +
         "<tr>" +
@@ -65,19 +70,34 @@ function ui_setup(job)
               "<div id='keyshortcuts''>" +
                   "Keyboard Shortcuts:" +
                   "<ul class='keyboardshortcuts' >" +
-                  "<li><code>t/y</code>  toggles play/pause on the video</li>" +
-                  "<li><code>r/u</code>  rewinds the video to the start</li>" +
-                  "<li><code>e/i</code>  creates a new object</li>" +
-                  "<li><code>f/j</code>  jump forward 10 frames</li>" +
-                  "<li><code>d/k</code>  jump backward 10 frames</li>" +
-                  "<li><code>v/n</code>  step forward 1 frame</li>" +
-                  "<li><code>c/m</code>  step backward 1 frame</li>" +
-                  "<li><code>g/h</code>  jump to next labeled frames</li>" +
-                  "<li><code>s/l</code>  jump to previous labeled frames</li>" +
-                  "<li><code>d/k</code>  jump backward 10 frames</li>" +
-                  "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
-                  "<li><code>w/o</code>  toggles hide labels</li>" +
-                  "<li><code>q/p</code>  toggles disable resize</li>" +
+                //  "<li><code>t/y</code>  toggles play/pause on the video</li>" +
+                 // "<li><code>r/u</code>  rewinds the video to the start</li>" +
+                 // "<li><code>e/i</code>  creates a new object</li>" +
+                 // "<li><code>f/j</code>  jump forward 10 frames</li>" +
+                 //"<li><code>d/k</code>  jump backward 10 frames</li>" +
+                //  "<li><code>v/n</code>  step forward 1 frame</li>" +
+                 // "<li><code>c/m</code>  step backward 1 frame</li>" +
+                 // "<li><code>g/h</code>  jump to next labeled frames</li>" +
+                 // "<li><code>s/l</code>  jump to previous labeled frames</li>" +
+                 // "<li><code>d/k</code>  jump backward 10 frames</li>" +
+                 // "<li><code>&nbsp;b&nbsp;</code>  toggles hide boxes</li>" +
+                 //"<li><code>w/o</code>  toggles hide labels</li>" +
+                  //"<li><code>q/p</code>  toggles disable resize</li>" +
+                    "<li><code>g/n</code>  step forward 1 image</li><br>" +
+                    "<li><code>b/m</code>  step backward 1 image</li><br>" +
+                    "<li><br></li><br>" +
+                    "<li><code>e</code> move bottom side up</li><br>" +
+                    "<li><code>d</code> move bottom side down</li><br>" +
+                    "<li><code>s</code> move right side left </li><br>" +
+                    "<li><code>f</code> move right side right</li><br>" +
+                    "<li><br></li><br>" +
+                    "<li><code>i</code>  move entire box up</li><br>" +
+                    "<li><code>k</code> move entire box down</li><br>" +
+                    "<li><code>j</code>  move entire box left</li><br>" +
+                    "<li><code>l</code>  move entire box right</li><br>" +
+                    "<li><br></li><br>" +
+                    "<li><code>CTRL +</code>  zoom in</li><br>" +
+                    "<li><code>CTRL -</code>  zoom out</li><br>" +
                   "</ul>" +
               "</div> " +
               "<div id='comments'>" +
@@ -101,14 +121,14 @@ function ui_setup(job)
 
     $("#frameinfobar").css({"width": "150px",
                             "padding-left": "20px"});
-    $("#frameinfobar").append("<div style='float: left;'><strong>Frame: </strong></div><div id='frameinfo'></div>");
+    $("#frameinfobar").append("<div style='float: left;'><strong>Frame: </strong></div><div id='frameinfo'></div> <div>/" + job.stop + "</div>");
     $("#frameinfo").css({"width": "30px",
                          "padding-left": "10px",
                          "float": "left"});
 
-    $("#bottombar").append("<div id='playerslider'></div>");
-    $("#bottombar").append("<div class='button' id='rewindbutton'>Rewind</div> ");
-    $("#bottombar").append("<div class='button' id='playbutton'>Play</div> ");
+    //$("#bottombar").append("<div id='playerslider'></div>");
+    $("#bottombar").append("<div class='button' id='previousbutton'>Previous Image</div> ");
+    $("#bottombar").append("<div class='button' id='nextbutton'>Next Image</div> ");
 
     $("#topbar").append("<div id='newobjectcontainer'>" +
         "<div class='button' id='newobjectbutton'>New Object</div></div>");
@@ -132,7 +152,7 @@ function ui_setup(job)
 
     $("#commentarea").val(decode_utf8(job.comment));
 
-    $("<div class='button' id='openadvancedoptions'>Options</div>")
+   /* $("<div class='button' id='openadvancedoptions'>Options</div>")
         .button({
             icons: {
                 primary: "ui-icon-wrench"
@@ -168,7 +188,7 @@ function ui_setup(job)
         "value='90,1' id='speedcontrolfast'>" +
     "<label for='speedcontrolfast'>Fast</label>" +
     "</div>");
-
+*/
     $("#submitbar").append("<div id='submitbutton' class='button'>Submit HIT</div>");
 
     if (mturk_isoffline())
@@ -182,7 +202,7 @@ function ui_setup(job)
 function ui_setupbuttons(job, player, tracks)
 {
     $("#instructionsbutton").click(function() {
-        player.pause();
+        //player.pause();
         ui_showinstructions(job);
     }).button({
         icons: {
@@ -190,10 +210,10 @@ function ui_setupbuttons(job, player, tracks)
         }
     });
 
-    $("#playbutton").click(function() {
+    $("#nextbutton").click(function() {
         if (!$(this).button("option", "disabled"))
         {
-            player.toggle();
+   /*         player.toggle();
 
             if (player.paused)
             {
@@ -202,7 +222,13 @@ function ui_setupbuttons(job, player, tracks)
             else
             {
                 eventlog("playpause", "Play video");
-            }
+            } */
+            skip  =1;
+            //player.pause();
+            player.displace(skip);
+
+            ui_snaptokeyframe(job, player);
+
         }
     }).button({
         disabled: false,
@@ -211,11 +237,19 @@ function ui_setupbuttons(job, player, tracks)
         }
     });
 
-    $("#rewindbutton").click(function() {
+    $("#previousbutton").click(function() {
         if (ui_disabled) return;
-        player.pause();
+/*        player.pause();
         player.seek(player.job.start);
-        eventlog("rewind", "Rewind to start");
+        eventlog("rewind", "Rewind to start"); */
+        skip  =-1;
+        //player.pause();
+        player.displace(skip);
+
+        ui_snaptokeyframe(job, player);
+
+
+
     }).button({
         disabled: true,
         icons: {
@@ -223,7 +257,7 @@ function ui_setupbuttons(job, player, tracks)
         }
     });
 
-    player.onplay.push(function() {
+   /* player.onplay.push(function() {
         $("#playbutton").button("option", {
             label: "Pause",
             icons: {
@@ -240,24 +274,25 @@ function ui_setupbuttons(job, player, tracks)
             }
         });
     });
+*/
 
     player.onupdate.push(function() {
         if (player.frame == player.job.stop)
         {
-            $("#playbutton").button("option", "disabled", true);
+            $("#nextbutton").button("option", "disabled", true);
         }
-        else if ($("#playbutton").button("option", "disabled"))
+        else if ($("#nextbutton").button("option", "disabled"))
         {
-            $("#playbutton").button("option", "disabled", false);
+            $("#nextbutton").button("option", "disabled", false);
         }
 
         if (player.frame == player.job.start)
         {
-            $("#rewindbutton").button("option", "disabled", true);
+            $("#previousbutton").button("option", "disabled", true);
         }
-        else if ($("#rewindbutton").button("option", "disabled"))
+        else if ($("#previousbutton").button("option", "disabled"))
         {
-            $("#rewindbutton").button("option", "disabled", false);
+            $("#previousbutton").button("option", "disabled", false);
         }
     });
 
@@ -269,8 +304,8 @@ function ui_setupbuttons(job, player, tracks)
         console.log("Change play delta to " + player.playdelta);
         if (!player.paused)
         {
-            player.pause();
-            player.play();
+            //player.pause();
+            //player.play();
         }
         eventlog("speedcontrol", "FPS = " + player.fps + " and delta = " + player.playdelta);
     });
@@ -338,7 +373,7 @@ function ui_setupbuttons(job, player, tracks)
 
         if (visible)
         {
-            $(".boundingboxtext").show();
+           // $(".boundingboxtext").show();
         }
         else
         {
@@ -367,15 +402,15 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
         var keycode = e.keyCode ? e.keyCode : e.which;
         eventlog("keyboard", "Key press: " + keycode);
 
-        if (keycode == 32 || keycode == 116 || keycode == 121)
+       /* if (keycode == 32 || keycode == 116 || keycode == 121)
         {
             // 32 ==> space, 116 ==> t, 121 ==> y
-            $("#playbutton").click();
+            $("#nextbutton").click();
         }
         if (keycode == 114 || keycode == 117)
         {
             // 114 ==> r, 117 ==>u
-            $("#rewindbutton").click();
+            $("#previousbutton").click();
         }
         else if (keycode == 101 || keycode == 105)
         {
@@ -396,11 +431,12 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
         {
             // 113 ==> q, 112 ==> p
             $("#annotateoptionsresize").click();
-        }
-        else
-        {
+        }*/
+//        else
+  //      {
             var skip = 0;
-            if (keycode == 100 || keycode == 107)
+            var box_change = 5;
+            /*if (keycode == 100 || keycode == 107)
             {
                 // 100 ==> d, 107 ==> k
                 skip = job.skip > 0 ? -job.skip : -10;
@@ -409,18 +445,170 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
             {
                 // 102 ==> f, 106 ==> j
                 skip = job.skip > 0 ? job.skip : 10;
-            }
-            else if (keycode == 118 || keycode == 110)
+            }*/
+            if (keycode == 103 || keycode == 110)
             {
-                // 118 ==> v, 110 ==> n
+                // 103 ==> g, 110 ==> n
                 skip = job.skip > 0 ? job.skip : 1;
             }
-            else if (keycode == 99 || keycode == 109)
+            else if (keycode == 98 || keycode == 109)
             {
-                // 99 ==> c, 109 ==> m
+                // 98 ==> b, 109 ==> m
                 skip = job.skip > 0 ? -job.skip : -1;
             }
-            else if (keycode == 115 || keycode == 108)
+            else if (keycode == 101)//move bottom side up
+            {
+                // 101 ==> e                 
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.ybr = old_position.ybr - box_change;
+                old_position.height = old_position.height - box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if (keycode == 100)//move bottom side down
+            {
+                // 100 ==> d                 
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.ybr = old_position.ybr + box_change;
+                old_position.height = old_position.height + box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if (keycode == 102)//move right side right
+            {
+                // 102 ==> f                 
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.xbr = old_position.xbr + box_change;
+                old_position.width = old_position.width + box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if (keycode == 115)//move right side left
+            {
+                // 115 ==> s                 
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.xbr = old_position.xbr - box_change;
+                old_position.width = old_position.width - box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if ( keycode ==  106)//move left
+            {
+                // 102 ==> f, 106 ==> j                
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.xtl = old_position.xtl - box_change;
+                old_position.xbr = old_position.xbr - box_change;
+                //old_position.ytl = old_position.ytl - box_change;
+                //old_position.ybr = old_position.ybr - box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if ( keycode ==  107)//move down
+            {
+                // 103 ==> g, 107 ==> k                
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                //old_position.xtl = old_position.xtl - box_change;
+                //old_position.xbr = old_position.xbr - box_change;
+                old_position.ytl = old_position.ytl + box_change;
+                old_position.ybr = old_position.ybr + box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if ( keycode ==  105)//move up
+            {
+                // 114 ==> r, 105 ==> i                
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                //old_position.xtl = old_position.xtl - box_change;
+                //old_position.xbr = old_position.xbr - box_change;
+                old_position.ytl = old_position.ytl - box_change;
+                old_position.ybr = old_position.ybr - box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+            else if ( keycode ==  108)//move right
+            {
+                // 116 ==> t, 108 ==> l                
+                
+                var track3 = tracks.tracks;
+
+                var track = track3[0];
+                var old_position = track.pollposition();            
+
+                old_position.xtl = old_position.xtl + box_change;
+                old_position.xbr = old_position.xbr + box_change;
+                //old_position.ytl = old_position.ytl - box_change;
+                //old_position.ybr = old_position.ybr - box_change;
+
+                track.draw(track.handle,old_position);
+                track.fixposition();
+                track.recordposition();
+                track.notifyupdate();
+
+            }
+         /*   else if (keycode == 115 || keycode == 108)
             {
                 // 115 ==> s, 108 ==> l
                 var cur_frame = player.frame;
@@ -477,16 +665,16 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
                     }
                 }
                 skip = final_frame - cur_frame;
-            }
+            }*/
 
             if (skip != 0)
             {
-                player.pause();
+                //player.pause();
                 player.displace(skip);
 
                 ui_snaptokeyframe(job, player);
             }
-        }
+    //    }
     });
 
 }
@@ -510,7 +698,7 @@ function ui_setupslider(player)
         min: player.job.start,
         max: player.job.stop,
         slide: function(event, ui) {
-            player.pause();
+            //player.pause();
             player.seek(ui.value);
             // probably too much bandwidth
             //eventlog("slider", "Seek to " + ui.value);
@@ -528,9 +716,9 @@ function ui_setupslider(player)
         float: "right"
     });
 
-    player.onupdate.push(function() {
+    /*player.onupdate.push(function() {
         slider.slider({value: player.frame});
-    });
+    });*/
 }
 
 function ui_iskeyframe(frame, job)
@@ -553,6 +741,7 @@ function ui_snaptokeyframe(job, player)
             player.seek(player.frame - remainder);
         }
     }
+       $("#not_done_text").html(" ");
 }
 
 function ui_setupclickskip(job, player, tracks, objectui)
@@ -566,9 +755,9 @@ function ui_setupclickskip(job, player, tracks, objectui)
         if (ui_iskeyframe(player.frame, job))
         {
             console.log("Key frame hit");
-            player.pause();
-            $("#newobjectbutton").button("option", "disabled", false);
-            $("#playbutton").button("option", "disabled", false);
+            //player.pause();
+            //$("#newobjectbutton").button("option", "disabled", false);
+            $("#nextbutton").button("option", "disabled", false);
             tracks.draggable(true);
             tracks.resizable(ui_canresize());
             tracks.recordposition();
@@ -577,7 +766,7 @@ function ui_setupclickskip(job, player, tracks, objectui)
         else
         {
             $("#newobjectbutton").button("option", "disabled", true);
-            $("#playbutton").button("option", "disabled", true);
+            $("#nextbutton").button("option", "disabled", true);
             tracks.draggable(false);
             tracks.resizable(false);
             objectui.disable();
@@ -604,6 +793,12 @@ function ui_loadprevious(job, objectui)
                                      data[i]["boxes"],
                                      data[i]["attributes"]);
         }
+
+        if(data.length == 0)        
+        {
+            $("#newobjectbutton").click();
+            $("#newobjectbutton").button("option", "disabled", true);
+        }
     });
 }
 
@@ -615,7 +810,26 @@ function ui_setupsubmit(job, tracks)
         }
     }).click(function() {
         if (ui_disabled) return;
-        ui_submit(job, tracks);
+
+        var a = tracks.tracks[0].journal.annotations;
+
+        var num_annotations = Object.keys(a).length;
+
+        //var min_a = job.stop/1.5;
+        var min_a = job.stop/50;
+
+        if(num_annotations < min_a)
+        { 
+            alert("You haven't annotated all the images yet!");
+            $("#not_done_text").html("You haven't annotated all the images yet!");
+            return;
+        }
+
+        if(confirm("Do you really want to SUBMIT?")){
+            ui_submit(job, tracks);
+        } else {
+            return;
+        }
     });
 }
 
@@ -781,6 +995,11 @@ function ui_showinstructions(job)
     }).click(ui_closeinstructions);
 
     instructions(job, h)
+    $('<div class="button" id="instructionsclosetop">Dismiss Instructions</div>').appendTo(h).button({
+        icons: {
+            primary: "ui-icon-circle-close"
+        }
+    }).click(ui_closeinstructions);
 
     ui_disable();
 }
@@ -800,8 +1019,8 @@ function ui_disable()
     if (ui_disabled++ == 0)
     {
         $("#newobjectbutton").button("option", "disabled", true);
-        $("#playbutton").button("option", "disabled", true);
-        $("#rewindbutton").button("option", "disabled", true);
+        $("#nextbutton").button("option", "disabled", true);
+        $("#previousbutton").button("option", "disabled", true);
         $("#submitbutton").button("option", "disabled", true);
         $("#playerslider").slider("option", "disabled", true);
 
@@ -815,9 +1034,9 @@ function ui_enable()
 {
     if (--ui_disabled == 0)
     {
-        $("#newobjectbutton").button("option", "disabled", false);
-        $("#playbutton").button("option", "disabled", false);
-        $("#rewindbutton").button("option", "disabled", false);
+        //$("#newobjectbutton").button("option", "disabled", false);
+        $("#nextbutton").button("option", "disabled", false);
+        $("#previousbutton").button("option", "disabled", false);
         $("#submitbutton").button("option", "disabled", false);
         $("#playerslider").slider("option", "disabled", false);
 
