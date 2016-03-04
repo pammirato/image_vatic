@@ -1,3 +1,7 @@
+
+****** Forked from https://github.com/weiliu89/vatic
+
+
 # VATIC - Video Annotation Tool from Irvine, California #
 
 VATIC is an online video annotation tool for computer vision research that
