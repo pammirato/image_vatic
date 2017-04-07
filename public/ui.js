@@ -22,7 +22,7 @@ function ui_build(job)
     var tracks = new TrackCollection(player, job);
     var objectui = new TrackObjectUI($("#newobjectbutton"), $("#objectcontainer"), videoframe, job, player, tracks);
 
-    ui_setupbuttons(job, player, tracks);
+    ui_setupbuttons(job, player, tracks,objectui);
     ui_setupslider(player);
     ui_setupsubmit(job, tracks);
     ui_setupclickskip(job, player, tracks, objectui);
@@ -67,7 +67,8 @@ function ui_setup(job)
           "</tr>" +
           "<tr>" +
               "<td>" +
-              "<div id='keyshortcuts''>" +
+              "<div id='keyshortcuts'>" +
+                  "<strong>Using just the mouse is usually most effecient! </strong> <br/>" +
                   "Keyboard Shortcuts:" +
                   "<ul class='keyboardshortcuts' >" +
                 //  "<li><code>t/y</code>  toggles play/pause on the video</li>" +
@@ -199,7 +200,7 @@ function ui_setup(job)
     return screen;
 }
 
-function ui_setupbuttons(job, player, tracks)
+function ui_setupbuttons(job, player, tracks,objectui)
 {
     $("#instructionsbutton").click(function() {
         //player.pause();
@@ -226,7 +227,7 @@ function ui_setupbuttons(job, player, tracks)
             skip  =1;
             //player.pause();
             player.displace(skip);
-
+            objectui.drawer.enable();
             ui_snaptokeyframe(job, player);
 
         }
@@ -279,7 +280,7 @@ function ui_setupbuttons(job, player, tracks)
     player.onupdate.push(function() {
         if (player.frame == player.job.stop)
         {
-            $("#nextbutton").button("option", "disabled", true);
+           // $("#nextbutton").button("option", "disabled", true);
         }
         else if ($("#nextbutton").button("option", "disabled"))
         {
@@ -449,12 +450,14 @@ function ui_setupkeyboardshortcuts(job, player, tracks)
             if (keycode == 103 || keycode == 110)
             {
                 // 103 ==> g, 110 ==> n
-                skip = job.skip > 0 ? job.skip : 1;
+                //skip = job.skip > 0 ? job.skip : 1;
+                $("#nextbutton").click();
             }
             else if (keycode == 98 || keycode == 109)
             {
                 // 98 ==> b, 109 ==> m
-                skip = job.skip > 0 ? -job.skip : -1;
+                //skip = job.skip > 0 ? -job.skip : -1;
+                $("#previousbutton").click();
             }
             else if (keycode == 101)//move bottom side up
             {
@@ -815,8 +818,8 @@ function ui_setupsubmit(job, tracks)
 
         var num_annotations = Object.keys(a).length;
 
-        //var min_a = job.stop/1.5;
-        var min_a = job.stop/50;
+        var min_a = job.stop/5;
+        //var min_a = job.stop/50;
 
         if(num_annotations < min_a)
         { 

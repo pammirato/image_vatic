@@ -9,6 +9,7 @@ scene_path=$BASE_PATH$1/"turkic_data"
 
 echo $scene_path
 
+#for i in $(ls $scene_path | grep $2); do
 for i in $(ls $scene_path); do
    vid_name=$1"_"$i   
    out_path=$scene_path/$i
@@ -26,7 +27,7 @@ for i in $(ls $scene_path); do
     fi
 
 
-    ./load_video $vid_name $out_path $label
+    ./bash_scripts/load_video.sh $vid_name $out_path $label
     #turkic delete $vid_name
     echo ------------------------------------ 
 

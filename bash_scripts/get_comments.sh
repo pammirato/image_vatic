@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "select slug,comment from videos,jobs where jobs.segmentid = videos.id"  | mysql -u ammirato vatic_ammirato1 > ./comments.txt
+echo "select slug,comment from videos,jobs where jobs.segmentid = videos.id"  | mysql -u ammirato vatic_ammirato1 > ./text_files/comments.txt
 
 
 

@@ -1,6 +1,6 @@
 
 ****** Forked from https://github.com/weiliu89/vatic
-
+***** Works best  with CHROME/CHROMIUM browser
 
 # VATIC - Video Annotation Tool from Irvine, California #
 

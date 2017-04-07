@@ -9,9 +9,10 @@ let "NUM_IMAGES -= 10"
 
 
 costt=$((NUM_IMAGES * 10)) #cents per image
-costt=$((costt + 100))
+costt=$((costt + 150))
 
-minutes=$((NUM_IMAGES / 9))
+minutes=$((NUM_IMAGES / 12))
+minutes=$((minutes + 3))
 
 costl=$(eval "expr length $costt")
 startt=$((costl - 3))
@@ -46,7 +47,16 @@ KEYWORDS="image, annotation, bounding, box, pictures, object, detection, compute
 
 
 
+#cd ../
+
  
 # turkic load $1 $2 $3 --title "$TITLE" --description "$DESCRIPTION" --duration $DURATION --lifetime $LIFETIME --keywords "$KEYWORDS" --cost .01 --completion-bonus $COST --train-with gold_standard_rohit_4
-turkic load $1 $2 $3 --title "$TITLE" --description "$DESCRIPTION" --duration $DURATION --lifetime $LIFETIME --keywords "$KEYWORDS" --cost $COST  --offline
+ turkic load $1 $2 $3 --title "$TITLE" --description "$DESCRIPTION" --duration $DURATION --lifetime $LIFETIME --keywords "$KEYWORDS" --cost $COST  --offline
 #turkic load $1 $2 $3 --title "$TITLE" --description "$DESCRIPTION" --duration $DURATION --lifetime $LIFETIME --keywords "$KEYWORDS" --cost $COST  
+
+
+#cd bash_scripts/
+
+
+
+

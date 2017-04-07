@@ -1013,7 +1013,8 @@ function Track(player, color, position)
             return bounds['left'];
         }
 
-        if (bounds['right'] == null || bounds['left'].outside)
+        //interpolate new position
+        /*if (bounds['right'] == null || bounds['left'].outside)
         {
             return bounds['left'];
         }
@@ -1049,7 +1050,8 @@ function Track(player, color, position)
             outside = bounds['left'].outside;
 //        }
 
-        return new Position(xtl, ytl, xbr, ybr, occluded, outside);
+        return new Position(xtl, ytl, xbr, ybr, occluded, outside); */
+        return new Position(0,0,0,0,false,false);
     }
 
     this.draw(this.player.frame);
@@ -1110,7 +1112,7 @@ function Journal(start, blowradius)
                     'rightframe': frame};
         }
 
-        var left = null;
+        /*var left = null;
         var right = null;
         var lefttime = 0;
         var righttime = 0;
@@ -1142,6 +1144,11 @@ function Journal(start, blowradius)
                 'leftframe': lefttime,
                 'right': right,
                 'rightframe': righttime};
+            */
+        return {'left': null,
+                'leftframe': 0,
+                'right': null,
+                'rightframe': 1};
     }
 
     /*

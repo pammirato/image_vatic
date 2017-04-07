@@ -50,19 +50,39 @@ function TrackObjectUI(button, container, videoframe, job, player, tracks)
 
     this.stopdrawing = function(position)
     {
+
         console.log("Received new track object drawing");
 
-        var track = tracks.add(player.frame, position, this.currentcolor[0]);
+        if (this.tracks.count() == 0)
+        {
+            var track = tracks.add(player.frame, position, this.currentcolor[0]);
+           
+            this.drawer.disable();
+            ui_disable();
 
-        this.drawer.disable();
-        ui_disable();
+ 
+            this.currentobject.onready.push(function() {
+                me.stopnewobject();
+            });
+            
+            this.currentobject.initialize(this.counter, track, this.tracks);
+            this.currentobject.stateclassify();
+        }
+        else
+        {
+            cur_track = tracks.tracks[0];
+            cur_journal = cur_track.journal;
+            cur_journal.mark(player.frame,position);             
+            
+            this.drawer.disable();
+            //ui_disable();
 
-        this.currentobject.onready.push(function() {
-            me.stopnewobject();
-        });
-        
-        this.currentobject.initialize(this.counter, track, this.tracks);
-        this.currentobject.stateclassify();
+            cur_track.draw(player.frame);
+        }
+    
+
+
+
     }
 
     this.stopnewobject = function()
